@@ -1,0 +1,21 @@
+# Дані та матеріали курсу: лише локально
+workspace/data/
+workspace/teachers-things/
+
+# Важкі артефакти
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+workspace/results/*/weights/
+workspace/results/*/preds*.json
+
+# Перевірочні запуски (SMOKE = True)
+workspace/results/_smoke/
+
+# Python і Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+wandb/

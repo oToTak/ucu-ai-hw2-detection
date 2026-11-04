@@ -1,40 +1,38 @@
 ---
-title: Homework 1 -- Your Title Here
-author: John Doe
+title: Homework 2 -- Object Detection on VisDrone
+author: Teodor Talan
 course: Artificial Intelligence · UCU
-date: 2026-10-12
+date: 2026-11-04
 ---
 
-## Introduction
+## Where everything is
 
-Write your report here using regular **Markdown**. This text is an example — replace it.
+| Rubric item | Report section | Notebook block (`hw2.ipynb`) | Results |
+|---|---|---|---|
+| Data Understanding and Preprocessing | Data | 1 | `workspace/results/00_*` |
+| Two-stage Anchor-based | Two-stage | 3 | `workspace/results/1*` |
+| One-stage Anchor-based | One-stage anchor-based | 4 | `workspace/results/2*` |
+| One-stage Anchor-free | One-stage anchor-free | 5 | `workspace/results/3*` |
+| Query-based | Query-based | 6 | `workspace/results/4*` |
+| Your Pipeline | Final pipeline | 7 | `workspace/results/5*` |
+| Bonus: Data Temporality | Bonus | 8 | `workspace/results/6*` |
+| Bonus: Visualization | Bonus | 9 | `workspace/results/7*` |
+| Bonus: Custom Architecture | Bonus | 10 | `workspace/results/8*` |
 
-## Method
+## Data
 
-Inline math works with single dollars: $f(x) = \sigma(Wx + b)$. Display math uses double dollars:
+## Two-stage
 
-$$
-\mathcal{L}(\theta) = -\frac{1}{N}\sum_{i=1}^{N} y_i \log \hat{y}_i
-$$
+## One-stage anchor-based
 
-Code blocks are highlighted:
+## One-stage anchor-free
 
-```python
-def accuracy(y_true, y_pred):
-    return (y_true == y_pred).mean()
-```
+## Query-based
 
-## Results
+## Final pipeline
 
-| Model    | Accuracy | F1   |
-|----------|----------|------|
-| Baseline | 0.71     | 0.68 |
-| Ours     | 0.84     | 0.82 |
+## Bonus
 
-Images go into the `images/` folder:
+## Final model and how to run
 
-<!-- ![Training loss](images/loss.png) -->
-
-## Conclusion
-
-> Summarize your findings here.
+## References
