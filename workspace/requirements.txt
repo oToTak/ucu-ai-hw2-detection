@@ -1,2 +1,7 @@
-# Torch на Kaggle вже встановлений. Решту додаємо разом з кодом, якому вони потрібні.
-pyyaml
+# Torch, torchvision і numpy на Kaggle вже встановлені: сюди не додавати. Решта лише дописується.
+pyyaml==6.0.3  # F
+faster-coco-eval==1.8.0  # F
+pandas==2.3.3  # F
+matplotlib==3.10.8  # F
+wandb==0.26.1  # F
+ultralytics==8.4.203  # UL

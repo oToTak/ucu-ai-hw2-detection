@@ -1,2 +1,33 @@
-# Спільний протокол для всіх ранів. Значення зафіксує T1.
+# Спільний протокол для всіх ранів (T1a, рішення D1, D2, D7, D8 у tasks/DECISIONS.md).
 seed: 42
+
+# Дані
+imgsz: 960              # довга сторона входу моделі
+frame_step: 3           # train: кожен 3-й кадр кліпу, ≈8k кадрів
+val_step: 5             # val: кожен 5-й кадр для кривої по епохах; фінальна оцінка на повному val
+mask_ignore: true       # тренування: заливати ignore-регіони (правило в src/CLAUDE.md)
+ignore_fill: 114        # сірий для заливки
+ignore_drop_ioa: 0.5    # об'єкт, що лежить в ignore-регіоні на >= цю частку площі, не йде в тренування
+num_workers: 4          # Kaggle має 4 vCPU
+
+# Бюджет
+budget_minutes: 75      # орієнтир часу на один повний ран
+
+# Інференс і сабміт
+conf: 0.001             # низький поріг: mAP любить повний хвіст
+max_det: 500            # ліміт умови на кадр
+eval_batch: 8           # батч інференсу у val і test
+fps_frames: 100         # скільки кадрів для вимірювання fps
+predict_test: true      # кожен серйозний ран пише submission.csv
+
+# Межі SMOKE = True
+smoke_limits:
+  train_clips: 2
+  train_frames: 64
+  val_clips: 2
+  val_frames: 30
+  test_clips: 2
+  test_frames: 8
+  fps_frames: 5
+  epochs: 1
+  max_iters: 20

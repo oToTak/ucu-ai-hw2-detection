@@ -19,3 +19,10 @@ __pycache__/
 .ipynb_checkpoints/
 .venv/
 wandb/
+
+# Передбачення, сабміти й службове: лежать у light.zip і Output Kaggle, але не в git
+workspace/results/*/preds*.json.gz
+workspace/results/*/submission*.csv
+workspace/results/*/dataset/
+*.cache
+light.zip

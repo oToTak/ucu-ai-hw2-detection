@@ -1,0 +1,7 @@
+# T3 експеримент 2: семплінг RoI другої стадії, частка позитивів 0.25 -> 0.5 (більше градієнта від об'єктів,
+# менше від фону). GIoU-лосс не робимо: fastrcnn_loss у torchvision не отримує пропозалів.
+extends: 10_frcnn_base
+
+model:
+  kwargs:
+    box_positive_fraction: 0.5

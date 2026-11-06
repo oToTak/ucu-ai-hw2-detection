@@ -1,0 +1,26 @@
+seed: 42
+imgsz: 960
+frame_step: 3
+val_step: 5
+mask_ignore: true
+ignore_fill: 114
+ignore_drop_ioa: 0.5
+num_workers: 4
+budget_minutes: 75
+conf: 0.001
+max_det: 500
+eval_batch: 8
+fps_frames: 100
+predict_test: true
+smoke_limits:
+  train_clips: 2
+  train_frames: 64
+  val_clips: 2
+  val_frames: 30
+  test_clips: 2
+  test_frames: 8
+  fps_frames: 5
+  epochs: 1
+  max_iters: 20
+runner: eda
+run_id: 00_eda

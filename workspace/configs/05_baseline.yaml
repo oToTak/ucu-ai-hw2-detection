@@ -1,1 +1,16 @@
 runner: models.baseline
+
+# Мета: пройти весь ланцюжок (train -> evaluator -> submission.csv), а не скор.
+model: yolo11n.pt       # найменший YOLO; ваги підтягуються з інтернету на Kaggle
+epochs: 8               # ≈0.5 GPU-год на Kaggle (оцінка, на smoke перевірити час епохи)
+batch: 16
+device:                 # порожньо = Ultralytics бере GPU 0
+
+train_args:             # довільні аргументи model.train (перекривають решту)
+  close_mosaic: 2       # дефолт 10 > epochs, тож мозаїка ніколи б не вимкнулась
+  patience: 100
+  amp: true
+  cache: false
+
+predict_args:           # аргументи model.predict
+  iou: 0.7              # поріг NMS (дефолт Ultralytics)

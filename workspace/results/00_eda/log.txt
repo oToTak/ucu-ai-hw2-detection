@@ -1,0 +1,2 @@
+EDA imgsz=960 frame_step=3 smoke=False
+готово

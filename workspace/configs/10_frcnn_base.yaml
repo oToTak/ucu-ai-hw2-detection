@@ -1,1 +1,37 @@
+# T3 база: Faster R-CNN R50-FPN (torchvision v1), COCO-pretrained, нова голова на 8 класів.
+# Параметри RPN/RoI явно виписані як у torchvision за замовчуванням, щоб 11 і 12 змінювали по одному.
 runner: models.frcnn
+
+model:
+  trainable_backbone_layers: 3   # розморожені останні 3 блоки backbone, решта і BN заморожені
+  anchor_sizes: [16, 32, 64, 128, 256]   # 87% об'єктів при 960 мають 8-48 px; у torchvision за замовчуванням 32-512
+  kwargs:
+    rpn_pre_nms_top_n_train: 2000    # на рівень FPN
+    rpn_post_nms_top_n_train: 2000
+    rpn_pre_nms_top_n_test: 1000
+    rpn_post_nms_top_n_test: 1000
+    rpn_nms_thresh: 0.7
+    box_nms_thresh: 0.5
+    box_fg_iou_thresh: 0.5
+    box_bg_iou_thresh: 0.5
+    box_batch_size_per_image: 512    # RoI на кадр у другій стадії
+    box_positive_fraction: 0.25
+
+train:
+  epochs: 4                # підібрати за s/it зі smoke і журналу: ран має вкластися в budget_minutes
+  batch_size: 4
+  lr: 0.005                # SGD, лінійне правило з 0.02 для батчу 16
+  momentum: 0.9
+  weight_decay: 0.0001
+  warmup_iters: 300
+  final_lr_frac: 0.01      # косинус до lr * final_lr_frac
+  grad_clip: 10.0
+  amp: true
+  hflip: 0.5
+  log_every: 100
+  reserve_minutes: 12      # запас бюджету на повний val, test і fps після тренування
+
+failure:
+  score_thr: 0.3           # детекції нижче цього score не рахуються у розборі фейлів
+  iou_thr: 0.5
+  examples: 6              # кропів на картинку

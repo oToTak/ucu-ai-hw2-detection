@@ -1,0 +1,9 @@
+# T3 експеримент 1 (параметр): більше пропозалів RPN. Щільні кадри мають десятки-сотні дрібних об'єктів.
+extends: 10_frcnn_base
+
+model:
+  kwargs:
+    rpn_pre_nms_top_n_train: 3000
+    rpn_post_nms_top_n_train: 3000
+    rpn_pre_nms_top_n_test: 2000
+    rpn_post_nms_top_n_test: 2000

@@ -19,7 +19,7 @@ Runner пише в `out_dir`:
 
 Власник цього розділу і спільних модулів: лейн F. Решта лише читає. Деталі виконання: `tasks/_common.md`.
 
-**Спільні модулі** (пише F у T1a): `common.py` (`seed_everything`, `smoke_subset`, `find_weights(run_id)`, `wandb_init`, `Predictor`, `pack_results`), `data.py` (читання split-ів, вибірка кадрів за кроком, ignore-регіони, датасети для Ultralytics і torchvision; усе, що треба писати, лягає в `out_dir`), `evaluator.py`, `submission.py`. `pipeline.py` приймає шаблони в `compute`/`show`/`COMPUTE` (`"1?_*"`), глибоко зливає конфіги, підтримує `extends: <ран>` і друкує хвіст `log.txt` при помилці.
+**Спільні модулі** (пише F у T1a): `common.py` (`seed_everything`, `smoke_subset`, `find_weights(run_id)`, `wandb_init`, `Predictor`, `pack_results`), `data.py` (читання split-ів, вибірка кадрів за кроком, ignore-регіони, датасети для Ultralytics і torchvision; усе, що треба писати, лягає в `out_dir`), `evaluator.py`, `submission.py`. `pipeline.py` приймає шаблони в `compute`/`show`/`COMPUTE` (`"1?_*"`), глибоко зливає конфіги, підтримує `extends: <ран>` і друкує хвіст `log.txt` при помилці. Без SMOKE упалий ран іде в `common.FAILED`, а сесія продовжується; `light.zip` оновлюється після кожного рану. У SMOKE виняток піднімається одразу.
 
 **Обов'язкові виходи кожного детектора в `out_dir`:**
 - `metrics.json`: `mAP, AP50, AP_small, AP_medium, AP_large, fps, train_minutes, epochs, imgsz, n_val_frames` (ключі саме такі);
@@ -35,3 +35,13 @@ Runner пише в `out_dir`:
 **SMOKE.** ≤2 кліпи, ≤64 кадри, ≤1 епоха, ≤3 хв, але всі виходи записані. Ран, що читає ваги іншого рану, у SMOKE бере їх із `results/_smoke/`.
 
 **Залежності.** `requirements.txt` лише дописується (піновані версії). `torch`, `torchvision`, `numpy` не додавати.
+
+**Оцінювач.** Один бекенд: `faster-coco-eval` (C++, API як у pycocotools). `max_det` застосовується на кадр поверх усіх класів, бо COCO рахує `maxDets` на категорію, а умова дає 500 на кадр. Малий/середній/великий за COCO-площею в пікселях оригіналу.
+
+**Ignore-регіони в тренуванні.** В оцінці це `iscrowd=1` у кожній категорії. У тренуванні (`mask_ignore: true` у протоколі, той самий код для Ultralytics і torchvision):
+1. Об'єкт, що лежить в одному ignore-регіоні на ≥ `ignore_drop_ioa` (0.5) своєї площі, не йде в тренування (≈1.3 % об'єктів train). В оцінці він лишається.
+2. Ignore-регіон заливається сірим `ignore_fill` (114), тож модель не вчить там фон і не бачить нерозмічених об'єктів як негативи. Пікселі об'єктів, що лишились, повертаються після заливки.
+3. Ultralytics: залиті кадри лежать у кеші `data.cache_root()` (системний temp, поза Output Kaggle), зменшені до `imgsz`, живуть одну сесію й спільні між ранами з тими самими параметрами. Це виняток із «кеш в out_dir»: 8k JPEG не мають іти в Output. torchvision: заливка на льоту в `TorchDetectionDataset`.
+4. Val і test ніколи не заливаються.
+
+**Git і light.zip.** `preds_val.json.gz` і `submission.csv` до десятків MB: вони в `light.zip` і Output, але в `.gitignore`. Ваги лише в Output.
