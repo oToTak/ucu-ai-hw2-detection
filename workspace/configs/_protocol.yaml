@@ -8,10 +8,11 @@ val_step: 5             # val: кожен 5-й кадр для кривої по
 mask_ignore: true       # тренування: заливати ignore-регіони (правило в src/CLAUDE.md)
 ignore_fill: 114        # сірий для заливки
 ignore_drop_ioa: 0.5    # об'єкт, що лежить в ignore-регіоні на >= цю частку площі, не йде в тренування
-num_workers: 4          # Kaggle має 4 vCPU
+num_workers: 4          # верхня межа; pipeline обмежує її os.cpu_count()
 
 # Бюджет
-budget_minutes: 75      # орієнтир часу на один повний ран
+budget_minutes: 75      # орієнтир часу на один повний ран, сумарно через відновлення
+ckpt_sync_minutes: 15   # Colab: чекпоінт на Drive не частіше ніж раз на стільки хвилин
 
 # Інференс і сабміт
 conf: 0.001             # низький поріг: mAP любить повний хвіст

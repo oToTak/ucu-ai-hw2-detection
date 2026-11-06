@@ -26,7 +26,8 @@ try:
 except ImportError:
     plt = None
 
-RESULTS = Path(__file__).resolve().parents[1] / "results"
+from .common import RESULTS, SMOKE_RESULTS
+
 METRIC_COLUMNS = [
     "mAP", "AP50", "AP75", "AP_small", "AP_medium", "AP_large", "AR",
     "fps", "train_minutes", "epochs", "imgsz", "n_val_frames",
@@ -42,7 +43,7 @@ def _float(value):
 
 
 def _run_folders(smoke):
-    root = RESULTS / "_smoke" if smoke else RESULTS
+    root = SMOKE_RESULTS if smoke else RESULTS
     if not root.exists():
         return []
     return sorted(p for p in root.iterdir() if p.is_dir() and not p.name.startswith("_"))

@@ -12,3 +12,5 @@
 - 2026-11-06 · [RV/G1] Review коду перед K0: 1 BLOCKER (UL, tloss це dict), 1 MAJOR (F, light.zip при падінні), 9 MINOR; список у tasks/handoff/RV.md, код не правив.
 - 2026-11-06 · [F/T1a] Правки після review: M1 (упалий ран не зупиняє сесію, light.zip після кожного рану) і F-1 (git pull у ноутбуці).
 - 2026-11-06 · [оркестратор] W0 і W1 готові, review G1 і правки внесено; код чекає на коміт автора й Kaggle smoke K0.
+- 2026-11-06 · [F/Colab] Чотири Colab-ноутбуки, src/colab.py, HW2_* env, staging ранів, save_progress/load_progress із wip на Drive, make_data_zip.py; перевірено лише py_compile, json, load_config.
+- 2026-11-06 · [оркестратор] Перехід на Colab: 4 ноутбуки, Drive-папка hw2, відновлення посеред рану, COLAB_RUNBOOK; чекає на коміт і smoke.

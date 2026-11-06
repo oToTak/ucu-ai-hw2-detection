@@ -19,6 +19,8 @@
 - Фейли (на повному val, score ≥ 0.3, IoU ≥ 0.5): missed_small (GT ≤ 32² без детекції), duplicate (другий збіг із уже зайнятим GT того ж класу), confusion (збіг лише з GT іншого класу). Також `rpn_recall.csv`: частка GT, покрита пропозалами RPN, проти знайдених фінальними детекціями (100 кадрів val).
 - Вага зберігається як `weights/best.pt` (conv/linear fp16, решта fp32). `19_compare` читає три ран-теки.
 
+**Colab (відновлення після дисконекту):** `run_detector` кличе `common.load_progress` на старті й `save_progress` наприкінці кожної епохи (після `train_log.csv`). `weights/last.pt` (model, optimizer, scheduler, scaler, epoch, best_mAP; лише коли є `HW2_WIP`) і `weights/best.pt` ідуть у `files`. Стан: `epoch, minutes, stage ("train" або "final_eval"), best_mAP, best_epoch, iters`. Продовжує з epoch+1; seed епохи = `seed + epoch` (python/numpy/torch і generator DataLoader; `persistent_workers` вимкнено заради цього); `minutes` і бюджет сумарні за всі сесії. Після тренування `save_progress(force=True)` зі `stage="final_eval"` лише з `best.pt`; на цьому етапі фінальний val, fps і сабміт рахуються заново, їх окремо не зберігаємо. `torch.load(last.pt, weights_only=False)`. Новий W&B-ран на кожну сесію. T4 отримує механізм безкоштовно через `run_detector`. Не перевірено, лише py_compile.
+
 **Ризики:** швидкість невідома: після smoke глянути `с/it` у `log.txt` і підігнати `train.epochs`; OOM при bs 4 малоймовірний (T4/P100 16 GB), інакше bs 2 і lr 0.0025; перший прохід `failure_analysis` і `rpn_recall` не бігав (rpn_recall у try/except, не валить ран); `torch.amp.GradScaler("cuda")` потребує torch ≥ 2.3.
 
 **Правки чужих файлів:** немає. **requirements:** нічого не додано.

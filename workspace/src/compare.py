@@ -28,7 +28,8 @@ try:
 except ImportError:  # matplotlib є в requirements; якщо ні, таблиці все одно пишемо
     plt = None
 
-RESULTS = Path(__file__).resolve().parents[1] / "results"
+from .common import RESULTS, SMOKE_RESULTS
+
 METRIC_COLUMNS = [
     "mAP", "AP50", "AP75", "AP_small", "AP_medium", "AP_large", "AR",
     "fps", "train_minutes", "epochs", "imgsz", "n_val_frames",
@@ -44,7 +45,7 @@ def _float(value):
 
 
 def _run_dir(run, smoke):
-    return RESULTS / "_smoke" / run if smoke else RESULTS / run
+    return SMOKE_RESULTS / run if smoke else RESULTS / run
 
 
 def _read_csv(path):

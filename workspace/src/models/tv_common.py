@@ -154,6 +154,7 @@ def run_detector(cfg, out_dir, data_root, smoke, build_model, label_offset, tags
         label_offset=label_offset,
         transforms=Augment(t["hflip"]),
     )
+    generator = torch.Generator().manual_seed(cfg["seed"])  # перед кожною епохою ставиться seed + epoch
     loader = torch.utils.data.DataLoader(
         dataset,
         batch_size=t["batch_size"],
@@ -162,10 +163,9 @@ def run_detector(cfg, out_dir, data_root, smoke, build_model, label_offset, tags
         num_workers=cfg["num_workers"],
         collate_fn=data.collate_detection,
         worker_init_fn=common.seed_worker,
-        generator=torch.Generator().manual_seed(cfg["seed"]),
+        generator=generator,
         pin_memory=device.type == "cuda",
-        persistent_workers=cfg["num_workers"] > 0,
-    )
+    )  # без persistent_workers: воркери беруть seed з generator щоепохи, тож продовження відтворюване
     total_iters = epochs * len(loader) if max_iters is None else min(max_iters, epochs * len(loader))
 
     model = build_model(cfg, True).to(device)
@@ -180,9 +180,29 @@ def run_detector(cfg, out_dir, data_root, smoke, build_model, label_offset, tags
     print(f"train {len(train_frames)} кадрів, val {len(val_frames)}, {len(loader)} ітерацій/епоха, device {device}, amp {use_amp}")
 
     weights_path = out_dir / "weights" / "best.pt"
-    best, best_epoch, it, start = None, 0, 0, time.time()
-    epochs_done, last_epoch_minutes = 0, 0.0
-    for epoch in range(1, epochs + 1):
+    last_path = out_dir / "weights" / "last.pt"  # усе для продовження; пишеться лише коли ввімкнене відновлення
+    best, best_epoch, it, epochs_done, last_epoch_minutes = None, 0, 0, 0, 0.0
+    prior_minutes, stage, session_start = 0.0, "train", time.time()
+
+    def minutes_total():
+        """Хвилини всіх сесій рану разом: з відновленого стану плюс ця сесія."""
+        return prior_minutes + (time.time() - session_start) / 60
+
+    resumed = common.load_progress(out_dir)  # None: ран із нуля (train_log.csv уже обрізано до епохи стану)
+    if resumed:
+        prior_minutes, epochs_done, stage = resumed["minutes"], resumed["epoch"], resumed["stage"]
+        best, best_epoch, it = resumed["best_mAP"], resumed["best_epoch"], resumed["iters"]
+        if stage == "train":
+            checkpoint = torch.load(last_path, map_location="cpu", weights_only=False)  # наш файл: не лише тензори
+            model.load_state_dict(checkpoint["model"])
+            optimizer.load_state_dict(checkpoint["optimizer"])
+            scheduler.load_state_dict(checkpoint["scheduler"])
+            scaler.load_state_dict(checkpoint["scaler"])
+            del checkpoint
+        print(f"продовжую після епохи {epochs_done} (етап {stage}), вже {prior_minutes:.1f} хв")
+    for epoch in range(epochs_done + 1 if stage == "train" else epochs + 1, epochs + 1):
+        common.seed_everything(cfg["seed"] + epoch)
+        generator.manual_seed(cfg["seed"] + epoch)
         model.train()
         epoch_start, loss_sum, loss_count, skipped = time.time(), 0.0, 0, 0
         for images, targets in loader:
@@ -217,7 +237,7 @@ def run_detector(cfg, out_dir, data_root, smoke, build_model, label_offset, tags
         train_loss = loss_sum / max(1, loss_count)
         res = val_evaluator.evaluate(common.predict_frames(
             predictor, val_frames, cfg["conf"], cfg["eval_batch"], cfg["max_det"], cfg["num_workers"]))
-        minutes = (time.time() - start) / 60
+        minutes = minutes_total()
         common.append_train_log(out_dir, epoch, round(train_loss, 5), round(res["mAP"], 5), round(res["AP50"], 5), round(minutes, 2))
         run.log({"epoch": epoch, "train_loss": train_loss, "val_mAP": res["mAP"], "val_AP50": res["AP50"], "minutes": minutes})
         print(f"epoch {epoch}: loss {train_loss:.4f} val mAP {res['mAP']:.4f} AP50 {res['AP50']:.4f} "
@@ -227,13 +247,29 @@ def run_detector(cfg, out_dir, data_root, smoke, build_model, label_offset, tags
             best, best_epoch = res["mAP"], epoch
             save_weights(model, weights_path)
         last_epoch_minutes = (time.time() - epoch_start) / 60
-        if max_iters is not None and it >= max_iters:
-            break
+        stop = max_iters is not None and it >= max_iters
         if not smoke and minutes + last_epoch_minutes > cfg["budget_minutes"] - t["reserve_minutes"] and epoch < epochs:
             print(f"бюджет: наступна епоха не вміститься в {cfg['budget_minutes']} хв, зупиняюсь після епохи {epoch}")
+            stop = True
+        # Кінець епохи: чекпоінт для продовження після дисконекту. Етап final_eval, якщо тренування закінчене.
+        progress = {"epoch": epoch, "minutes": minutes, "stage": "final_eval" if stop or epoch == epochs else "train",
+                    "best_mAP": best, "best_epoch": best_epoch, "iters": it}
+        if common.WIP is not None:
+            torch.save({"model": model.state_dict(), "optimizer": optimizer.state_dict(),
+                        "scheduler": scheduler.state_dict(), "scaler": scaler.state_dict(), "epoch": epoch,
+                        "best_mAP": best}, last_path)
+        common.save_progress(out_dir, progress, files=[last_path, weights_path] if common.WIP is not None else ())
+        if stop:
             break
 
-    train_minutes = (time.time() - start) / 60
+    train_minutes = minutes_total()
+    # Тренування закінчене. Оцінка й сабміт не зберігаються: після дисконекту тут вони рахуються заново з best.pt.
+    common.save_progress(
+        out_dir,
+        {"epoch": epochs_done, "minutes": train_minutes, "stage": "final_eval", "best_mAP": best, "best_epoch": best_epoch, "iters": it},
+        files=[weights_path] if common.WIP is not None else (),
+        force=True,
+    )
     load_weights(model, weights_path)  # далі всюди best
     metrics = evaluator.finish_run(
         predictor, cfg, out_dir, data_root, smoke, round(train_minutes, 2), epochs_done,

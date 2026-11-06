@@ -139,12 +139,34 @@ def run(cfg, out_dir, data_root, smoke):
     val_evaluator = evaluator.Evaluator(val_frames, cfg["max_det"])
     epochs = cfg["smoke_limits"]["epochs"] if smoke else cfg["epochs"]
 
-    state = {"epochs_done": 0, "best_mAP": -1.0, "native": None, "finished": False, "prev": 0.0}
-    start = time.time()
+    # Відновлення після дисконекту (Colab): load_progress дає стан останнього чекпоінта або None.
+    # Той самий out_dir, data.yaml і project/name на новій VM, тож Ultralytics resume знаходить усе сам.
+    last_rel = Path("dataset/ultralytics/train/weights/last.pt")
+    saved = common.load_progress(out_dir)
+    stage = saved.get("stage") if saved else None
+    if stage == "trained" and not best_path.exists():
+        stage = None
+    if stage == "train" and not (out_dir / last_rel).exists():
+        stage = None
+    if stage is None:
+        saved = None
+        (out_dir / "train_log.csv").unlink(missing_ok=True)  # старт з нуля: старого логу не лишаємо
+    minutes_before = float(saved.get("minutes", 0.0)) if saved else 0.0
+    state = {
+        "epochs_done": int(saved.get("epoch", 0)) if saved else 0,
+        "best_mAP": float(saved.get("best_mAP", -1.0)) if saved else -1.0,
+        "native": None,
+        "finished": stage == "trained",
+        "prev": minutes_before,
+    }
+    start = time.time() - minutes_before * 60  # хвилини накопичуються між сесіями
+    print(f"resume: stage={stage} state={saved}")
 
     def on_fit_epoch_end(trainer):
         # Після останньої епохи (або ранньої зупинки) Ultralytics кличе колбек ще раз із final_eval: пропускаємо.
         if state["finished"]:
+            return
+        if trainer.epoch + 1 <= state["epochs_done"]:  # повтор епохи: рядок у train_log.csv вже є
             return
         import torch
 
@@ -175,8 +197,18 @@ def run(cfg, out_dir, data_root, smoke):
         if over:
             trainer.stop = True
         state["finished"] = bool(trainer.stop) or epoch >= trainer.epochs
+        # Прогрес для Colab (поза Colab no-op), після append_train_log. Зміна етапу: force.
+        files = [rel for rel in (last_rel, best_path.relative_to(out_dir)) if (out_dir / rel).exists()]
+        common.save_progress(
+            out_dir,
+            {"epoch": epoch, "minutes": minutes, "stage": "trained" if state["finished"] else "train",
+             "best_mAP": state["best_mAP"]},
+            files=files,
+            force=state["finished"],
+        )
 
-    model = _model_class(cfg["model"])(cfg["model"])
+    resuming = stage == "train"
+    model = _model_class(cfg["model"])(str(out_dir / last_rel) if resuming else cfg["model"])
     model.add_callback("on_fit_epoch_end", on_fit_epoch_end)
     train_args = dict(
         data=str(data_yaml),
@@ -194,7 +226,11 @@ def run(cfg, out_dir, data_root, smoke):
         val=True,
     )
     train_args.update(cfg.get("train_args") or {})
-    model.train(**train_args)
+    if resuming:
+        # Ultralytics бере решту аргументів з чекпоінта (епохи, imgsz, project/name: ті самі шляхи); дозволені змінні:
+        model.train(resume=True, data=str(data_yaml), device=train_args["device"], workers=train_args["workers"])
+    elif stage != "trained":  # "trained": навчання вже завершене, одразу фінальна оцінка
+        model.train(**train_args)
     train_minutes = (time.time() - start) / 60
 
     strip_optimizer(best_path)  # fp16 без оптимізатора

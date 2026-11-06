@@ -45,3 +45,7 @@ Runner пише в `out_dir`:
 4. Val і test ніколи не заливаються.
 
 **Git і light.zip.** `preds_val.json.gz` і `submission.csv` до десятків MB: вони в `light.zip` і Output, але в `.gitignore`. Ваги лише в Output.
+
+**Colab.** `workspace/colab/*.ipynb` тонкі, логіка в `colab.py`. `colab.setup()` виставляє `HW2_RESULTS`, `HW2_WIP`, `HW2_PACK_DIR`, `HW2_DATA`, `HW2_WORK`, `HW2_SMOKE_RESULTS`; без них код працює як на Kaggle чи локально. Шляхи результатів брати лише з `common.RESULTS` і `common.SMOKE_RESULTS`. Ран рахується на локальному диску й копіюється в `RESULTS/<ран>` лише готовим; готовий ран (`metrics.json`) пропускається, крім `compare`/`summary` і `force`.
+
+**Відновлення.** Сесія Colab живе ≈5 годин і рветься непередбачувано, тому кожен довгий ранер кличе `common.load_progress(out_dir)` на старті й `common.save_progress(out_dir, state, files=[...])` після епохи. Це no-op поза Colab. `budget_minutes` і `train_minutes` рахуються сумарно через відновлення (`state["minutes"]`). Деталі й сигнатури: `tasks/handoff/F.md`.

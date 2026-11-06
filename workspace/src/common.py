@@ -1,12 +1,16 @@
-"""Спільне для всіх ранів: seed, smoke, ваги, W&B, Predictor, пакування результатів.
+"""Спільне для всіх ранів: seed, smoke, ваги, W&B, Predictor, відновлення, пакування результатів.
 
 Важкі залежності (torch, wandb) імпортуються лише всередині функцій.
 """
 import csv
+import filecmp
 import glob
+import json
 import os
 import random
+import shutil
 import tempfile
+import threading
 import time
 import zipfile
 from concurrent.futures import ThreadPoolExecutor
@@ -15,14 +19,17 @@ from pathlib import Path
 import numpy as np
 
 WORKSPACE = Path(__file__).resolve().parents[1]
-RESULTS = WORKSPACE / "results"
+# Env виставляє colab.setup() до першого імпорту цього модуля. Без env усе як раніше.
+RESULTS = Path(os.environ.get("HW2_RESULTS") or WORKSPACE / "results")
+SMOKE_RESULTS = Path(os.environ.get("HW2_SMOKE_RESULTS") or RESULTS / "_smoke")
+WIP = Path(os.environ["HW2_WIP"]) if os.environ.get("HW2_WIP") else None  # None: відновлення вимкнене
 KAGGLE_INPUT = "/kaggle/input"
 KAGGLE_WORKING = Path("/kaggle/working")
 WANDB_PROJECT = "ucu-ai-hw2-detection"
 TRAIN_LOG_COLUMNS = ["epoch", "train_loss", "val_mAP", "val_AP50", "minutes"]
 
 SMOKE = False  # виставляє pipeline.configure
-COMPUTED = []  # рани, пораховані в цій сесії; дописує pipeline.compute
+COMPUTED = []  # рани, пораховані чи пропущені як готові в цій сесії; дописує pipeline.compute
 FAILED = []  # рани, що впали в цій сесії; дописує pipeline.compute
 
 
@@ -59,9 +66,9 @@ def smoke_subset(frames, max_clips=2, max_frames=64):
 
 
 def _find_in_runs(run_id, patterns, what, smoke):
-    """Шукає файл рану: results/_smoke (у SMOKE), results, потім Kaggle Input."""
+    """Шукає файл рану: SMOKE_RESULTS (у SMOKE), RESULTS, потім Kaggle Input."""
     smoke = SMOKE if smoke is None else smoke
-    roots = ([RESULTS / "_smoke" / run_id] if smoke else []) + [RESULTS / run_id]
+    roots = ([SMOKE_RESULTS / run_id] if smoke else []) + [RESULTS / run_id]
     searched = []
     for root in roots:
         for pattern in patterns:
@@ -137,6 +144,12 @@ def _wandb_key():
         from kaggle_secrets import UserSecretsClient
 
         return UserSecretsClient().get_secret("WANDB_API_KEY")
+    except Exception:
+        pass
+    try:
+        from google.colab import userdata
+
+        return userdata.get("WANDB_API_KEY")
     except Exception:
         return None
 
@@ -245,26 +258,263 @@ def measure_fps(predictor, frames, conf, n=100):
     return len(images) / (time.perf_counter() - start)
 
 
+STATE_FILE = "state.json"  # останній стан; на Drive щоразу
+CKPT_STATE_FILE = "ckpt_state.json"  # стан, що відповідає чекпоінту на Drive; пишеться після нього
+SMALL_PROGRESS_FILES = ("train_log.csv", "meta.json", "config.yaml", "log.txt")
+
+_progress = {"sync_minutes": 15, "last_sync": None, "thread": None, "files": set()}
+
+
+def wip_dir(run_id):
+    """Постійний каталог незавершеного рану: HUB/wip/<ран>; у SMOKE на Colab локальний _smoke/_wip/<ран>."""
+    if WIP is None:
+        return None
+    return SMOKE_RESULTS / "_wip" / run_id if SMOKE else WIP / run_id
+
+
+def _copy_synced(source, target):
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with open(source, "rb") as src, open(target, "wb") as dst:
+        shutil.copyfileobj(src, dst, 1024 * 1024)
+        dst.flush()
+        try:
+            os.fsync(dst.fileno())
+        except OSError:
+            pass
+
+
+def _copy_atomic(source, target):
+    """Копія в *.tmp, потім os.replace: обрив посеред копіювання не лишає битий файл."""
+    partial = target.with_name(target.name + ".tmp")
+    _copy_synced(source, partial)
+    os.replace(partial, target)
+
+
+def _write_json_atomic(path, payload):
+    partial = path.with_name(path.name + ".tmp")
+    partial.write_text(json.dumps(payload, default=float), encoding="utf-8")
+    os.replace(partial, path)
+
+
+def _read_json(path):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def copy_tree(source, target, skip=None):
+    """Копіює дерево файлів без copystat (Drive може його не прийняти). skip(rel: Path) -> bool."""
+    source, target = Path(source), Path(target)
+    for path in sorted(source.rglob("*")):
+        rel = path.relative_to(source)
+        if path.is_file() and not (skip and skip(rel)):
+            _copy_synced(path, target / rel)
+
+
+def progress_begin(cfg):
+    """Скидає стан механізму перед раном. Кличе pipeline."""
+    _progress.update(sync_minutes=cfg.get("ckpt_sync_minutes", 15), last_sync=None, files=set())
+
+
+def wait_progress():
+    """Чекає на фонове копіювання чекпоінта. Pipeline кличе його перед виходом із рану."""
+    thread = _progress["thread"]
+    if thread is not None:
+        thread.join()
+    _progress["thread"] = None
+
+
+def _sync_checkpoint(snapshot, wip, rels, payload):
+    """Спершу всі файли в *.tmp, потім швидка заміна, і лише тоді стан чекпоінта."""
+    try:
+        for rel in rels:
+            _copy_synced(snapshot / rel, wip / f"{rel}.tmp")
+        for rel in rels:
+            os.replace(wip / f"{rel}.tmp", wip / rel)
+        _write_json_atomic(wip / CKPT_STATE_FILE, payload)
+    except OSError as e:
+        print(f"save_progress: чекпоінт не скопійовано: {e}")
+
+
+def _start_checkpoint_sync(out_dir, wip, rels, state):
+    wait_progress()  # наступне копіювання чекає завершення попереднього
+    # Знімок на локальному диску: ранер може перезаписати файл, поки він їде на Drive.
+    snapshot = Path(tempfile.gettempdir()) / "hw2_snap" / out_dir.name
+    sizes = {}
+    for rel in rels:
+        (snapshot / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(out_dir / rel, snapshot / rel)
+        sizes[rel] = (snapshot / rel).stat().st_size
+    payload = {**state, "_files": rels, "_sizes": sizes}
+    _progress["last_sync"] = time.monotonic()
+    _progress["thread"] = threading.Thread(
+        target=_sync_checkpoint, args=(snapshot, wip, rels, payload), daemon=True
+    )
+    _progress["thread"].start()
+
+
+def save_progress(out_dir, state, files=(), force=False):
+    """Зберігає прогрес рану. Поза Colab no-op. Помилка Drive лише друкується, ран не падає.
+
+    state: JSON-сумісний dict (домовленість: epoch, minutes, stage; ключі на "_" зайняті).
+    files: файли чекпоінта всередині out_dir. Щоразу на Drive йдуть state.json, train_log.csv,
+    meta.json, config.yaml, log.txt; чекпоінт у фоні й не частіше ніж раз на ckpt_sync_minutes
+    (force=True: негайно, для зміни етапу). Файли перезаписуються на місці, історії немає.
+    """
+    out_dir = Path(out_dir)
+    wip = wip_dir(out_dir.name)
+    if wip is None:
+        return
+    rels = []
+    for path in files:
+        path = Path(path)
+        rels.append((path if path.is_absolute() else out_dir / path).relative_to(out_dir).as_posix())
+    _progress["files"].update(rels)
+    state = dict(state)
+    try:
+        wip.mkdir(parents=True, exist_ok=True)
+        _write_json_atomic(wip / STATE_FILE, {**state, "_files": sorted(_progress["files"])})
+        for name in SMALL_PROGRESS_FILES:
+            if (out_dir / name).exists():
+                _copy_atomic(out_dir / name, wip / name)
+        last = _progress["last_sync"]
+        due = last is None or time.monotonic() - last >= _progress["sync_minutes"] * 60
+        if rels and (force or due):
+            _start_checkpoint_sync(out_dir, wip, rels, state)
+    except OSError as e:
+        print(f"save_progress: {e}")
+
+
+def _trim_train_log(path, epoch):
+    """Прибирає епохи новіші за чекпоінт: їх перерахують, дублів у кривій не буде."""
+    if not path.exists():
+        return
+    with open(path, newline="", encoding="utf-8") as f:
+        rows = list(csv.reader(f))
+    kept = rows[:1] + [row for row in rows[1:] if row and float(row[0]) <= epoch]
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerows(kept)
+
+
+def _discard_progress(out_dir, reason):
+    print(f"load_progress: починаю спочатку, {reason}")
+    for name in (STATE_FILE, CKPT_STATE_FILE, "train_log.csv"):
+        (out_dir / name).unlink(missing_ok=True)
+
+
+def load_progress(out_dir):
+    """Стан, з якого продовжувати, або None (починати спочатку). Поза Colab завжди None.
+
+    Якщо ран зберігав чекпоінти, це стан саме останнього чекпоінта, що доїхав на Drive,
+    а не найновіший state.json. train_log.csv обрізається до його епохи.
+    """
+    if WIP is None:
+        return None
+    out_dir = Path(out_dir)
+    latest = _read_json(out_dir / STATE_FILE)
+    if latest is None:
+        return None
+    state = latest
+    if latest.get("_files"):
+        state = _read_json(out_dir / CKPT_STATE_FILE)
+        if state is None:
+            _discard_progress(out_dir, "чекпоінт не встиг доїхати на Drive")
+            return None
+        for rel, size in state["_sizes"].items():
+            path = out_dir / rel
+            if not path.exists() or path.stat().st_size != size:
+                _discard_progress(out_dir, f"чекпоінт {rel} неповний")
+                return None
+    state = {key: value for key, value in state.items() if not key.startswith("_")}
+    if "epoch" in state:
+        _trim_train_log(out_dir / "train_log.csv", state["epoch"])
+    return state
+
+
+def restore_wip(run_id, out_dir):
+    """Копіює wip/<ран> в out_dir, нічого не стираючи. True, якщо є що відновлювати."""
+    wip = wip_dir(run_id)
+    if wip is None:
+        return False
+    latest = None if SMOKE else _read_json(wip / STATE_FILE)
+    if latest is None:
+        clear_wip(run_id)
+        return False
+    copy_tree(wip, out_dir, skip=lambda rel: rel.name.endswith(".tmp"))
+    _progress["files"].update(latest.get("_files", []))
+    return True
+
+
+def clear_wip(run_id):
+    wip = wip_dir(run_id)
+    if wip is not None:
+        shutil.rmtree(wip, ignore_errors=True)
+
+
+def progress_private_files():
+    """Службові файли рану, що не йдуть у RESULTS: стан і чекпоінти, крім best.*."""
+    return {STATE_FILE, CKPT_STATE_FILE} | {
+        rel for rel in _progress["files"] if not Path(rel).name.startswith("best.")
+    }
+
+
+def progress_selfcheck(out_dir):
+    """SMOKE на Colab: один раз зберігає чекпоінт у _smoke/_wip і відтворює його. Інакше no-op."""
+    out_dir = Path(out_dir)
+    if WIP is None or not SMOKE:
+        return
+    source = (sorted((out_dir / "weights").glob("best.*")) or [out_dir / "config.yaml"])[0]
+    state = {"epoch": 0, "minutes": 0.0, "stage": "selfcheck"}
+    save_progress(out_dir, state, [source], force=True)
+    wait_progress()
+    with tempfile.TemporaryDirectory() as tmp:
+        restored = Path(tmp) / out_dir.name
+        copy_tree(wip_dir(out_dir.name), restored)
+        same = load_progress(restored) == state and filecmp.cmp(
+            source, restored / source.relative_to(out_dir), shallow=False
+        )
+    clear_wip(out_dir.name)
+    if not same:
+        raise RuntimeError("Механізм відновлення не відтворив чекпоінт")
+    print(f"Відновлення перевірено на {source.name}")
+
+
 def pack_results(zip_name="light.zip"):
-    """Пакує results/ без ваг у light.zip; розпаковувати у workspace/results/. Друкує упалі рани."""
+    """Пакує results/ без ваг у light.zip; розпаковувати у workspace/results/. Друкує упалі рани.
+
+    З HW2_PACK_DIR (Colab) архів іде туди й без важких передбачень; у SMOKE окремий
+    light_smoke.zip лише зі _smoke.
+    """
     if FAILED:
         print(f"УВАГА, впали рани: {FAILED}")
     if not COMPUTED:
         print("pack_results: у цій сесії нічого не рахували")
         return None
-    target_dir = KAGGLE_WORKING if KAGGLE_WORKING.exists() else WORKSPACE
+    pack_dir = os.environ.get("HW2_PACK_DIR")
+    target_dir = Path(pack_dir) if pack_dir else KAGGLE_WORKING if KAGGLE_WORKING.exists() else WORKSPACE
+    root, prefix = RESULTS, ""
+    if pack_dir and SMOKE:
+        root, prefix, zip_name = SMOKE_RESULTS, "_smoke/", "light_smoke.zip"
     target = target_dir / zip_name
     partial = target_dir / f"{zip_name}.tmp"  # обрив під час запису не псує попередній архів
-    skip_dirs = {"weights", "dataset", "wandb", "__pycache__"}
+    skip_dirs = {"weights", "dataset", "wandb", "__pycache__", "_wip"}
     skip_suffixes = {".pt", ".pth", ".ckpt", ".safetensors", ".cache"}
     count = 0
-    with zipfile.ZipFile(partial, "w", zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(RESULTS.rglob("*")):
-            rel = path.relative_to(RESULTS)
-            if not path.is_file() or skip_dirs & set(rel.parts) or path.suffix in skip_suffixes:
-                continue
-            archive.write(path, rel.as_posix())
-            count += 1
+    with tempfile.TemporaryDirectory() as tmp:  # локально: zip робить seek, Drive цього не любить
+        local = Path(tmp) / zip_name
+        with zipfile.ZipFile(local, "w", zipfile.ZIP_DEFLATED) as archive:
+            for path in sorted(root.rglob("*")):
+                rel = path.relative_to(root)
+                if not path.is_file() or skip_dirs & set(rel.parts) or path.suffix in skip_suffixes:
+                    continue
+                if rel.parts[0].startswith("_partial_"):
+                    continue
+                if pack_dir and path.name.startswith(("preds", "submission")):
+                    continue
+                archive.write(path, prefix + rel.as_posix())
+                count += 1
+        shutil.copyfile(local, partial)
     os.replace(partial, target)
     print(f"{target}: {count} файлів, {target.stat().st_size / 1e6:.1f} MB")
     return target

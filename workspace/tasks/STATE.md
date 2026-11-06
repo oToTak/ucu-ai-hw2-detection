@@ -28,7 +28,7 @@
 
 | Сесія | Статус | Результати в results/ | public score |
 |---|---|---|---|
-| K0 smoke | чекає на автора | | |
+| K0 smoke (Colab, ноутбук 1) | чекає на автора | | |
 | K1 | todo | | |
 | K2a/K2b | todo | | |
 | K3 | todo | | |
@@ -36,7 +36,8 @@
 
 ## Чекають на автора
 
-- Перевірити пункти зі «Що має перевірити автор на старті» в `DECISIONS.md`.
+- Commit+push; `make_data_zip.py`, папка `hw2` на Drive; smoke у ноутбуці 1 (`COLAB_RUNBOOK.md`).
+- Перевірити на Kaggle: метрика на вкладці Evaluation, ліміт сабмітів.
 
 ## Зміни рішень відносно DECISIONS.md
 
@@ -46,3 +47,5 @@
 
 06.11 · RV-1 завершено. UL (B1 + MINOR), F (M1 + MINOR), TV (TV-1 + MINOR) виправляють через продовження своїх воркерів. ORC-1 виправлено в KAGGLE_RUNBOOK. W2 (T4, T5, T7-код) стартує лише після K0 smoke, щоб не множити код на неперевіреній основі.
 06.11 · Правки UL, F, TV готові (py_compile). UL-4, UL-5 відкладено до виміру на 05_baseline. Чекаємо на автора: commit+push, потім K0 smoke. Після K0 старт W2.
+06.11 · Перехід на Colab (Kaggle без інтернету, лише сабміти вручну). F: 4 ноутбуки в workspace/colab/, src/colab.py, спільна Drive-папка hw2, save_progress/load_progress, make_data_zip.py (5.60 ГБ). UL і TV вбудовують відновлення. Далі: runbook, commit+push автора, smoke на Colab, потім W2.
+06.11 · UL і TV вбудували відновлення (py_compile). COLAB_RUNBOOK написано, CLAUDE.md і PLAN оновлено. Незакомічена чужа правка hw2.ipynb лишається на рішення автора. Після K0 старт W2; T4 продовжує TV, T5 продовжує UL.

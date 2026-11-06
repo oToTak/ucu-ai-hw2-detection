@@ -24,5 +24,6 @@ wandb/
 workspace/results/*/preds*.json.gz
 workspace/results/*/submission*.csv
 workspace/results/*/dataset/
+workspace/results/_failed/
 *.cache
 light.zip
