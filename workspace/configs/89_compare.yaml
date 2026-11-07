@@ -1,0 +1,3 @@
+runner: compare
+runs: [30_yolo_base, 31_yolo_imgsz, 80_custom_arch, 81_custom_nwd]
+title: "Своя архітектура проти yolo11s"

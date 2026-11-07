@@ -16,17 +16,19 @@
 
 | Ноутбук | Рани | ≈ год |
 |---|---|---|
+| [0_smoke_all](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/0_smoke_all.ipynb) | спільний smoke усіх нових ранів | ≈1 |
 | [1_baseline_twostage](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/1_baseline_twostage.ipynb) | `05_baseline`, `1?_*` | 4.25 |
-| [2_anchor_custom](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/2_anchor_custom.ipynb) | `2?_*`, `8?_*` | 6.25 |
-| [3_yolo_temporal_viz](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/3_yolo_temporal_viz.ipynb) | `3?_*`, `6?_*`, `7?_*` | 4.75 |
-| [4_detr_final](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/4_detr_final.ipynb) | `4?_*`, `5?_*` | 7.75 |
+| [2_anchor](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/2_anchor.ipynb) | `2?_*` | 3.75 |
+| [3_yolo_custom](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/3_yolo_custom.ipynb) | `3?_*`, `8?_*` | 6.5 |
+| [4_detr](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/4_detr.ipynb) | `4?_*` | 3.75 |
+| [5_final_temporal_viz](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/5_final_temporal_viz.ipynb) | `5?_*`, `6?_*`, `7?_*`, лише після вибору моделей | ≈5 |
 
 Години орієнтовні, швидкість T4 ще не заміряна.
 
 ## Запуск
 
 1. Відкрити посилання, Runtime → Run all, дозволити доступ до Drive.
-2. Перша клітинка: `COMPUTE` і `SMOKE`. `SMOKE = True` лише для перевірки, у першому ноутбуці стоїть за замовчуванням.
+2. Перша клітинка: `COMPUTE` і `SMOKE`. Спершу один раз `0_smoke_all`, бо рани читають smoke-ваги одне одного, а вони живуть лише в цій сесії. Він зупиняється на першому падінні, а `light_smoke.zip` із логами лежить у `hw2` в обох випадках.
 3. Вкладку лишати відкритою. Рани дійдуть до кінця або сесія відвалиться: обидва випадки нормальні.
 
 ## Якщо відвалилось

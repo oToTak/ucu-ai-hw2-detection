@@ -1,1 +1,28 @@
+# T4 база: RetinaNet R50-FPN (torchvision v1), COCO-pretrained, стандартні якорі (32-512 px, 9 на локацію),
+# нова голова класифікації на 8 класів. Параметри виписані явно, щоб 21 і 22 змінювали по одному.
 runner: models.retina
+
+model:
+  trainable_backbone_layers: 3
+  kwargs:
+    fg_iou_thresh: 0.5
+    bg_iou_thresh: 0.4
+    nms_thresh: 0.5
+    topk_candidates: 1000      # кандидатів на рівень FPN до NMS
+  focal:                       # у torchvision зашито 0.25 і 2.0
+    alpha: 0.25
+    gamma: 2.0
+
+train:
+  epochs: 4
+  batch_size: 4
+  lr: 0.0025               # SGD, лінійне правило з 0.01 для батчу 16 (референс torchvision)
+  momentum: 0.9
+  weight_decay: 0.0001
+  warmup_iters: 300
+  final_lr_frac: 0.01
+  grad_clip: 10.0
+  amp: true
+  hflip: 0.5
+  log_every: 100
+  reserve_minutes: 12

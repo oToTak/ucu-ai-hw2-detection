@@ -1,1 +1,36 @@
+# T7 фінальний пайплайн, ПЛЕЙСХОЛДЕР: модель і набір трюків ще не вибрані (етап 2, після результатів 1x-4x).
+# Runner не тренує: бере ваги вже готового рану, на тій самій валідації додає трюки інференсу (src/infer_tricks.py).
+# Окремі рани для ефекту даних/інференсу й ефекту моделі робляться через `extends: 50_final` і зміну лише
+# одного блоку (приклад: 51_final_sahi вимикає tta, 52_final_wbf лишає лише tta+merge).
 runner: final
+
+weights_from: 10_frcnn_base   # плейсхолдер. Рядок або список ранів (список = ансамбль моделей, злиття через merge)
+# model_weights: [1.0, 1.0]   # ваги моделей у WBF, якщо weights_from список
+val_full: true                # повний val; false: кожен val_step-й кадр (швидка оцінка)
+
+tricks:
+  tta:
+    enabled: true
+    flip: true                # горизонтальний флип
+    scales: [1.0, 1.25]       # множники довгої сторони входу (відносно imgsz моделі); 1.0 це прохід по цілому кадру
+  sahi:
+    enabled: true
+    slice_size: 640           # сторона тайла, пікселі оригіналу (val до 3840, test до 1920: підбирати з огляду на це)
+    overlap: 0.2
+    slice_imgsz: null         # null: тайл іде на вхід моделі з її imgsz (torchvision і Ultralytics його збільшують)
+    edge_px: 3                # рамки, що впираються у внутрішній край тайла, відкидаються
+    tile_batch: 16
+    pre_nms: 5000
+    nms_iou: 0.5              # NMS між тайлами одного кадру
+    nms_metric: iou           # iou | ios
+    source_max_det: 1000
+  merge:
+    method: wbf               # wbf | nms | soft_nms
+    iou_thr: 0.6              # wbf: поріг збігу з злитою рамкою; nms: поріг придушення
+    skip_box_thr: 0.0
+    conf_type: avg            # wbf: avg | max
+    nms_metric: iou
+    soft_method: gaussian     # soft_nms: gaussian | linear
+    sigma: 0.5
+    linear_iou_thr: 0.3
+    score_thr: 0.001

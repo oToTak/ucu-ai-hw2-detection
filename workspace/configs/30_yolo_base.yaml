@@ -1,1 +1,21 @@
+# T5 база: yolo11s (anchor-free, decoupled голова, TAL-assigner), imgsz 960 з протоколу.
+# 31 і 32 змінюють по одному набору параметрів через extends.
 runner: models.yolo
+
+model: yolo11s.pt
+epochs: 10              # ОЦІНКА ≈1 год на T4 (не заміряно): підігнати після першого запуску
+batch: 16
+device:
+
+train_args:
+  close_mosaic: 2
+  patience: 100
+  amp: true
+  cache: false
+  box: 7.5              # дефолти Ultralytics виписані явно, щоб 32 змінював їх по одному
+  cls: 0.5
+  dfl: 1.5
+  cls_pw: 0.0
+
+predict_args:
+  iou: 0.7

@@ -1,0 +1,8 @@
+# T5 експеримент 2: loss. cls 0.5 -> 1.0 (вага класифікації) і cls_pw 0 -> 0.5 (ваги класів за зворотною частотою,
+# для рідкісних tricycle/bus/truck). Діапазон: cls 0.5-1.5, cls_pw 0-1. tal_topk (assigner) у 8.4.203 не
+# є аргументом тренування (жорстко 10 у utils/loss.py), тож assigner не міняємо.
+extends: 30_yolo_base
+
+train_args:
+  cls: 1.0
+  cls_pw: 0.5

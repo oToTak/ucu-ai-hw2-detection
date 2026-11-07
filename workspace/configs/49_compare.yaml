@@ -1,0 +1,3 @@
+runner: compare
+runs: [10_frcnn_base, 20_retina_base, 30_yolo_base, 40_rtdetr_base, 41_rtdetr_queries, 42_rtdetr_lr]
+title: "Query-based (RT-DETR) проти CNN"

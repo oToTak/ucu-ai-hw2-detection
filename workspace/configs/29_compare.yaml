@@ -1,0 +1,5 @@
+# Початкова й тюнінговані RetinaNet проти two-stage. Відсутні рани пропускаються; після результатів лишити
+# найкращий з 1x, щоб графіки не були перевантажені.
+runner: compare
+runs: [10_frcnn_base, 11_frcnn_rpn, 12_frcnn_loss, 20_retina_base, 21_retina_anchors, 22_retina_focal]
+title: "One-stage (RetinaNet) vs two-stage"

@@ -1,0 +1,8 @@
+# T4 експеримент 2 (focal loss): gamma 2 -> 1 і alpha 0.25 -> 0.5 (пара пов'язана: менше gamma, більше alpha).
+# Стандартні якорі, тож відрізняється від бази лише лосом.
+extends: 20_retina_base
+
+model:
+  focal:
+    alpha: 0.5
+    gamma: 1.0

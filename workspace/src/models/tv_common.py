@@ -111,6 +111,15 @@ def load_weights(model, path):
         raise RuntimeError(f"Ваги не збігаються з моделлю: немає {bad[:5]}, зайві {list(unexpected)[:5]}")
 
 
+def set_bn_eps(model, eps=0.0):
+    """Ран без pretrained будує звичайний BatchNorm2d, а torchvision при COCO-вагах ставить eps=0.0 на
+    FrozenBatchNorm2d (overwrite_eps). Виклик після побудови моделі без pretrained робить інференс після
+    load_predictor тим самим, що й у тренуванні."""
+    for module in model.modules():
+        if isinstance(module, torch.nn.BatchNorm2d):
+            module.eps = eps
+
+
 def _device():
     return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

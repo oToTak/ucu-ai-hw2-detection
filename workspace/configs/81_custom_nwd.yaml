@@ -1,0 +1,14 @@
+# B3 абляція 2: 30_yolo_base + NWD у box-loss. Архітектура й бюджет як у бази. P2 тут немає, щоб ефекти не змішувались.
+# NWD лише в регресії; assigner і NMS не міняються (у статті NWD є і там). dfl і gain box без змін.
+extends: 30_yolo_base
+runner: models.custom
+base: 30_yolo_base
+
+experiment:
+  change: "box-loss = 0.5 CIoU + 0.5 NWD (Wang et al., 2021); архітектура, assigner, NMS, протокол без змін"
+  why: "EDA: 73.5% об'єктів train малі після ресайзу до 960; для рамки 10 px зсув на 2 px уже сильно змінює IoU, а NWD змінюється плавно"
+  hypothesis: "AP_small зросте за тієї самої вартості; AP_large не впаде"
+
+nwd:
+  ratio: 0.5        # частка NWD; 0 = база, 1 = лише NWD
+  constant: 22.8    # C = типовий абсолютний розмір: медіана sqrt(площі) train при 960 (00_eda)

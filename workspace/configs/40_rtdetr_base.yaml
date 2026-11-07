@@ -1,1 +1,30 @@
+# T6 база: RT-DETR-l (query-based, 300 queries, гібридний енкодер, Hungarian matching), ваги COCO.
+# Бюджет як у CNN-ранів (_protocol: 75 хв, imgsz 960). 41 і 42 змінюють по одному параметру через extends.
+# УСЕ НЕ ЗАМІРЯНО: epochs і batch підігнати після першого запуску.
+# Ultralytics RT-DETR розтягує кадр у квадрат imgsz x imgsz (scale_fill), тож 960 = 960x960, дорожче за 960x540.
 runner: models.rtdetr
+
+model: rtdetr-l.pt
+epochs: 4               # ОЦІНКА: епоха ≈15-25 хв на T4 (rtdetr-l, 960x960, AMP); бюджет-сторож зупинить раніше, якщо не вкладається
+batch: 4                # 16 стандартний не влізе в T4 при 960x960; 4 безпечно, 8 можна спробувати
+device:
+eval_batch: 4           # інференс rtdetr-l 960x960 у колбеку поруч із пам'яттю тренера
+
+rtdetr:                 # обробляє src/models/rtdetr.py (не аргументи Ultralytics)
+  num_queries:          # порожньо = 300 (дефолт rtdetr-l). EDA: об'єктів на кадр train mean 46, p95 118, max 180
+  backbone_lr_mult: 1.0 # 1.0 = один LR на всю модель
+  converged_min_map: 0.02
+
+train_args:
+  optimizer: AdamW      # ручний, не auto: auto для малих ітерацій дає lr0 ≈ 4e-4
+  lr0: 0.0001           # рецепт RT-DETR (AdamW 1e-4)
+  lrf: 0.01
+  momentum: 0.9
+  weight_decay: 0.0001
+  warmup_epochs: 0.5    # дефолт 3 з'їв би більшість із 4 епох
+  warmup_bias_lr: 0.0   # дефолт 0.1 завеликий для AdamW
+  nbs: 16               # при batch 4 акумулюємо x4: ≈505 кроків на епоху, а не 126 при nbs 64
+  close_mosaic: 1       # дефолт 10 > epochs
+  patience: 100
+  amp: true             # ризик NaN у Hungarian matching з AMP (докстрінг RTDETRTrainer); Ultralytics сам відновлюється з last.pt до 3 разів
+  cache: false

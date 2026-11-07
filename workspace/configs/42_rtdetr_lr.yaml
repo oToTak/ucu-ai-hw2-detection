@@ -1,0 +1,7 @@
+# T6 експеримент 2: окремий LR backbone. backbone (HGNetV2, шари 0-9) lr0 * 0.1 = 1e-5, енкодер і декодер 1e-4.
+# Діапазон множника 0.05-1.0. Ваги matching/loss (class 1, bbox 5, giou 2; cost 2/5/2) у 8.4.203 жорстко в
+# DETRLoss.__init__ і не є аргументами тренування, тож їх не міняємо.
+extends: 40_rtdetr_base
+
+rtdetr:
+  backbone_lr_mult: 0.1

@@ -1,4 +1,4 @@
-# Handoff TV (T3, T4 ще ні)
+# Handoff TV (T3 + T4)
 
 **Зроблено:** `src/models/tv_common.py`, `src/models/frcnn.py`, `configs/10_frcnn_base.yaml`, `11_frcnn_rpn.yaml`, `12_frcnn_loss.yaml`, `19_compare.yaml`. Перевірено лише `py_compile` і `pipeline.load_config` для 4 конфігів. Сигнатури torchvision звірені з вихідним кодом на GitHub (faster_rcnn.py, roi_heads.py, rpn.py) і докою AMP; torch локально немає, перший запуск = Kaggle smoke.
 
@@ -24,3 +24,12 @@
 **Ризики:** швидкість невідома: після smoke глянути `с/it` у `log.txt` і підігнати `train.epochs`; OOM при bs 4 малоймовірний (T4/P100 16 GB), інакше bs 2 і lr 0.0025; перший прохід `failure_analysis` і `rpn_recall` не бігав (rpn_recall у try/except, не валить ран); `torch.amp.GradScaler("cuda")` потребує torch ≥ 2.3.
 
 **Правки чужих файлів:** немає. **requirements:** нічого не додано.
+
+## T4 (RetinaNet)
+**Зроблено:** `src/models/retina.py`, `configs/20_retina_base`, `21_retina_anchors`, `22_retina_focal`, `29_compare`. Перевірено лише `py_compile` і `load_config`; сигнатури torchvision RetinaNet звірено з вихідним кодом. Цикл, відновлення (`load_progress`/`save_progress`) і Predictor ті самі, що в 1x (`run_detector`); `train.epochs: 4` як у 1x, `lr 0.0025` (лінійно від 0.01 для батчу 16). Розбір фейлів для 2x не рахується.
+**run_id:** `20`, `21`, `22` (GPU, ≈75 хв кожен), `29_compare` (CPU, читає 1x і 2x з results; після результатів лишити в `runs` найкращий з 1x).
+- 20: стандартні якорі 32-512 (9 на локацію), голова COCO крім нового `cls_logits`. 21: 9 розмірів k-means з EDA (`anchors.wh` в yaml, джерело `results/00_eda/metrics.json`): по 3 на P3, P4, P5 за площею, P6 і P7 = найбільша група x2, x4; нові `cls_logits` і `bbox_reg` (3 якорі на локацію, ваги COCO не підходять). 22: focal gamma 2->1, alpha 0.25->0.5 на стандартних якорях.
+- Focal alpha/gamma у torchvision зашиті, тому `retina._focal_compute_loss` (копія логіки torchvision з параметрами, loss у fp32) підміняє `compute_loss` голови; для 20 дає те саме, що torchvision.
+- 22 і 21 обидва extends 20 (по одному фактору); комбінації нема, якщо обидва допоможуть, це окремий ран.
+**Зміна 10-12:** лише `tv_common.set_bn_eps` + виклик у `frcnn.build_model(pretrained=False)`. Ваги COCO ставлять eps=0 на FrozenBN (overwrite_eps), а `load_predictor` будував BatchNorm2d з eps 1e-5: перезавантажений Faster R-CNN (T7, B2) давав би трохи інші виходи. Тренування й метрики 10-12 не змінюються (їхній predictor це модель із тренування).
+**Ризики:** `bbox_reg` і `cls_logits` нові в 21, тож їй потрібна довша збіжність за 4 епохи; RetinaNet під AMP схильний до NaN (такі батчі пропускаються й лічаться в логу: «пропущено батчів»); `WHAnchorGenerator` підміняє `cell_anchors` базового класу, перша перевірка на smoke.

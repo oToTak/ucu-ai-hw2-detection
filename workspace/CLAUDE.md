@@ -17,7 +17,7 @@
 | Шлях | Що це |
 |---|---|
 | `hw2.ipynb` | Оглядовий ноутбук: по блоку на кожен пункт рубрики, показує результати |
-| `workspace/colab/` | Чотири тонкі ноутбуки для обчислень на Colab, `make_data_zip.py` |
+| `workspace/colab/` | Тонкі ноутбуки (спільний smoke і п'ять родин) для обчислень на Colab, `make_data_zip.py` |
 | `report.md`, `images/` | Звіт і його картинки |
 | `workspace/configs/` | Один yaml = один експеримент. `_protocol.yaml` спільний для всіх |
 | `workspace/src/` | Код. Контракт описаний у `workspace/src/CLAUDE.md` |

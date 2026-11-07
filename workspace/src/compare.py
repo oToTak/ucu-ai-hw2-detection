@@ -20,6 +20,8 @@ import csv
 import json
 from pathlib import Path
 
+from . import common
+
 try:
     import matplotlib
 
@@ -73,12 +75,17 @@ def _load_run(run, smoke):
         sizes = {row["size"]: _float(row.get("AP")) for row in sizes_rows}
     else:
         sizes = {s: _float(metrics.get(f"AP_{s}")) for s in SIZES}
-    curve = []
+    curve, curve_min = [], []
     for row in curve_rows:
         epoch, val = _float(row.get("epoch")), _float(row.get("val_mAP"))
         if epoch is not None and val is not None:
             curve.append((epoch, val))
-    return {"run": run, "metrics": metrics, "sizes": sizes, "curve": curve}
+        minutes = _float(row.get("minutes"))  # стовпця може не бути або він порожній
+        if minutes is not None and val is not None:
+            curve_min.append((minutes, val))
+    if not curve_min:
+        print(f"compare: {run}: немає minutes у train_log.csv, у графіку за часом пропущено")
+    return {"run": run, "metrics": metrics, "sizes": sizes, "curve": curve, "curve_min": curve_min}
 
 
 def _fmt(value):
@@ -145,6 +152,25 @@ def _plot_curves(runs, path, title):
     plt.close(fig)
 
 
+def _plot_curves_minutes(runs, path, title):
+    runs = [r for r in runs if r["curve_min"]]
+    if not runs:
+        print("compare: немає minutes у train_log, compare_curves_minutes.png пропущено")
+        return
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    for r in runs:
+        xs, ys = zip(*r["curve_min"])
+        ax.plot(xs, ys, marker="o", label=r["run"])
+    ax.set_xlabel("хвилини тренування")
+    ax.set_ylabel("val mAP")
+    ax.set_title(f"Крива val mAP за часом{': ' + title if title else ''}")
+    ax.grid(alpha=0.3)
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+
 def _safe_plot(name, fn, *args):
     try:
         fn(*args)
@@ -169,3 +195,7 @@ def run(cfg, out_dir, data_root, smoke):
         return
     _safe_plot("compare_sizes", _plot_sizes, runs, out_dir / "plots" / "compare_sizes.png", title)
     _safe_plot("compare_curves", _plot_curves, runs, out_dir / "plots" / "compare_curves.png", title)
+    _safe_plot(
+        "compare_curves_minutes", _plot_curves_minutes, runs,
+        out_dir / "plots" / "compare_curves_minutes.png", title,
+    )

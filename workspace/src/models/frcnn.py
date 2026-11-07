@@ -44,7 +44,9 @@ def build_model(cfg, pretrained):
         in_features = model.roi_heads.box_predictor.cls_score.in_features
         model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
         return model
-    return fasterrcnn_resnet50_fpn(weights=None, weights_backbone=None, num_classes=num_classes, **kwargs)
+    model = fasterrcnn_resnet50_fpn(weights=None, weights_backbone=None, num_classes=num_classes, **kwargs)
+    tv_common.set_bn_eps(model, 0.0)  # як overwrite_eps у pretrained-гілці; на 10-12 не впливає (там predictor = модель із тренування)
+    return model
 
 
 def load_predictor(cfg, weights):
