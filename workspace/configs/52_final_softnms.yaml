@@ -1,0 +1,13 @@
+# T7, ефект інференсу 2 з 4: ті самі два проходи (флип), але злиття Soft-NMS замість WBF. Міняється лише tricks.merge.
+# Показує внесок способу злиття окремо від TTA (порівнювати з 51). Без test: це лише абляція на val,
+# submission зі Soft-NMS не планується (щоб отримати, поставити predict_test: true).
+# Тривалість (ОЦІНКА): 2 x 2846 проходів ≈ 8 хв ≈ 0.2 год GPU.
+extends: 50_final
+
+predict_test: false
+
+tricks:
+  tta:
+    enabled: true
+  merge:
+    method: soft_nms

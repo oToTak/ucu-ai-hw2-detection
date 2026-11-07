@@ -1,0 +1,69 @@
+W&B: ключа немає, логування вимкнене
+Downloading: "https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth" to /root/.cache/torch/hub/checkpoints/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth
+train 8090 кадрів, val 571, 2022 ітерацій/епоха, device cuda, amp True
+epoch 1 it 100/8088 loss 1.2597 {'loss_classifier': 0.4798, 'loss_box_reg': 0.6328, 'loss_objectness': 0.0908, 'loss_rpn_box_reg': 0.0564} lr 0.00167 0.42 с/it
+epoch 1 it 200/8088 loss 1.3089 {'loss_classifier': 0.3868, 'loss_box_reg': 0.5051, 'loss_objectness': 0.335, 'loss_rpn_box_reg': 0.082} lr 0.00334 0.41 с/it
+epoch 1 it 300/8088 loss 1.1812 {'loss_classifier': 0.5272, 'loss_box_reg': 0.5432, 'loss_objectness': 0.0678, 'loss_rpn_box_reg': 0.043} lr 0.00500 0.41 с/it
+epoch 1 it 400/8088 loss 0.9435 {'loss_classifier': 0.3575, 'loss_box_reg': 0.4763, 'loss_objectness': 0.0611, 'loss_rpn_box_reg': 0.0486} lr 0.00500 0.41 с/it
+epoch 1 it 500/8088 loss 1.0215 {'loss_classifier': 0.398, 'loss_box_reg': 0.5291, 'loss_objectness': 0.0473, 'loss_rpn_box_reg': 0.0472} lr 0.00499 0.41 с/it
+epoch 1 it 600/8088 loss 0.8795 {'loss_classifier': 0.3583, 'loss_box_reg': 0.4488, 'loss_objectness': 0.0351, 'loss_rpn_box_reg': 0.0374} lr 0.00498 0.41 с/it
+epoch 1 it 700/8088 loss 1.0132 {'loss_classifier': 0.4044, 'loss_box_reg': 0.4702, 'loss_objectness': 0.066, 'loss_rpn_box_reg': 0.0725} lr 0.00497 0.41 с/it
+epoch 1 it 800/8088 loss 1.0441 {'loss_classifier': 0.4389, 'loss_box_reg': 0.513, 'loss_objectness': 0.0425, 'loss_rpn_box_reg': 0.0497} lr 0.00495 0.41 с/it
+epoch 1 it 900/8088 loss 1.1204 {'loss_classifier': 0.4487, 'loss_box_reg': 0.5371, 'loss_objectness': 0.0448, 'loss_rpn_box_reg': 0.0897} lr 0.00493 0.41 с/it
+epoch 1 it 1000/8088 loss 1.0960 {'loss_classifier': 0.4798, 'loss_box_reg': 0.5208, 'loss_objectness': 0.0373, 'loss_rpn_box_reg': 0.0581} lr 0.00490 0.41 с/it
+epoch 1 it 1100/8088 loss 0.9606 {'loss_classifier': 0.3529, 'loss_box_reg': 0.5146, 'loss_objectness': 0.0482, 'loss_rpn_box_reg': 0.0449} lr 0.00487 0.41 с/it
+epoch 1 it 1200/8088 loss 0.5662 {'loss_classifier': 0.2217, 'loss_box_reg': 0.3038, 'loss_objectness': 0.0226, 'loss_rpn_box_reg': 0.0181} lr 0.00484 0.41 с/it
+epoch 1 it 1300/8088 loss 0.8185 {'loss_classifier': 0.3204, 'loss_box_reg': 0.4249, 'loss_objectness': 0.0362, 'loss_rpn_box_reg': 0.0371} lr 0.00480 0.41 с/it
+epoch 1 it 1400/8088 loss 0.8891 {'loss_classifier': 0.3505, 'loss_box_reg': 0.46, 'loss_objectness': 0.0275, 'loss_rpn_box_reg': 0.0511} lr 0.00476 0.41 с/it
+epoch 1 it 1500/8088 loss 0.9612 {'loss_classifier': 0.3867, 'loss_box_reg': 0.4663, 'loss_objectness': 0.045, 'loss_rpn_box_reg': 0.0632} lr 0.00472 0.41 с/it
+epoch 1 it 1600/8088 loss 0.9777 {'loss_classifier': 0.3468, 'loss_box_reg': 0.5491, 'loss_objectness': 0.0396, 'loss_rpn_box_reg': 0.0422} lr 0.00467 0.41 с/it
+epoch 1 it 1700/8088 loss 0.7131 {'loss_classifier': 0.2983, 'loss_box_reg': 0.3715, 'loss_objectness': 0.0149, 'loss_rpn_box_reg': 0.0284} lr 0.00462 0.41 с/it
+epoch 1 it 1800/8088 loss 0.8424 {'loss_classifier': 0.3335, 'loss_box_reg': 0.4375, 'loss_objectness': 0.0283, 'loss_rpn_box_reg': 0.0432} lr 0.00456 0.41 с/it
+epoch 1 it 1900/8088 loss 0.8159 {'loss_classifier': 0.3272, 'loss_box_reg': 0.4158, 'loss_objectness': 0.0294, 'loss_rpn_box_reg': 0.0435} lr 0.00450 0.41 с/it
+epoch 1 it 2000/8088 loss 0.9188 {'loss_classifier': 0.3421, 'loss_box_reg': 0.4549, 'loss_objectness': 0.0368, 'loss_rpn_box_reg': 0.0849} lr 0.00444 0.41 с/it
+epoch 1: loss 1.0076 val mAP 0.1731 AP50 0.3715 (16.0 хв, пропущено батчів 0)
+epoch 2 it 2100/8088 loss 0.8780 {'loss_classifier': 0.3044, 'loss_box_reg': 0.4523, 'loss_objectness': 0.075, 'loss_rpn_box_reg': 0.0463} lr 0.00438 0.45 с/it
+epoch 2 it 2200/8088 loss 0.7363 {'loss_classifier': 0.3047, 'loss_box_reg': 0.3651, 'loss_objectness': 0.0269, 'loss_rpn_box_reg': 0.0396} lr 0.00431 0.43 с/it
+epoch 2 it 2300/8088 loss 0.7870 {'loss_classifier': 0.3047, 'loss_box_reg': 0.3845, 'loss_objectness': 0.0461, 'loss_rpn_box_reg': 0.0516} lr 0.00424 0.42 с/it
+epoch 2 it 2400/8088 loss 0.6479 {'loss_classifier': 0.212, 'loss_box_reg': 0.4011, 'loss_objectness': 0.0115, 'loss_rpn_box_reg': 0.0232} lr 0.00416 0.42 с/it
+epoch 2 it 2500/8088 loss 0.7369 {'loss_classifier': 0.2867, 'loss_box_reg': 0.3912, 'loss_objectness': 0.0247, 'loss_rpn_box_reg': 0.0342} lr 0.00409 0.41 с/it
+epoch 2 it 2600/8088 loss 0.7252 {'loss_classifier': 0.2552, 'loss_box_reg': 0.4332, 'loss_objectness': 0.0183, 'loss_rpn_box_reg': 0.0185} lr 0.00401 0.41 с/it
+epoch 2 it 2700/8088 loss 0.6067 {'loss_classifier': 0.2177, 'loss_box_reg': 0.349, 'loss_objectness': 0.0241, 'loss_rpn_box_reg': 0.0159} lr 0.00393 0.41 с/it
+epoch 2 it 2800/8088 loss 0.6871 {'loss_classifier': 0.2392, 'loss_box_reg': 0.3998, 'loss_objectness': 0.0225, 'loss_rpn_box_reg': 0.0256} lr 0.00384 0.41 с/it
+epoch 2 it 2900/8088 loss 0.7004 {'loss_classifier': 0.2507, 'loss_box_reg': 0.3808, 'loss_objectness': 0.0338, 'loss_rpn_box_reg': 0.0351} lr 0.00376 0.41 с/it
+epoch 2 it 3000/8088 loss 0.7365 {'loss_classifier': 0.2978, 'loss_box_reg': 0.3796, 'loss_objectness': 0.0218, 'loss_rpn_box_reg': 0.0373} lr 0.00367 0.41 с/it
+epoch 2 it 3100/8088 loss 0.7292 {'loss_classifier': 0.2886, 'loss_box_reg': 0.3644, 'loss_objectness': 0.0386, 'loss_rpn_box_reg': 0.0376} lr 0.00358 0.41 с/it
+epoch 2 it 3200/8088 loss 1.0381 {'loss_classifier': 0.3952, 'loss_box_reg': 0.5, 'loss_objectness': 0.062, 'loss_rpn_box_reg': 0.0809} lr 0.00349 0.41 с/it
+epoch 2 it 3300/8088 loss 0.7374 {'loss_classifier': 0.2944, 'loss_box_reg': 0.3994, 'loss_objectness': 0.0103, 'loss_rpn_box_reg': 0.0333} lr 0.00340 0.41 с/it
+epoch 2 it 3400/8088 loss 0.5945 {'loss_classifier': 0.1929, 'loss_box_reg': 0.3685, 'loss_objectness': 0.0165, 'loss_rpn_box_reg': 0.0165} lr 0.00330 0.41 с/it
+epoch 2 it 3500/8088 loss 0.5435 {'loss_classifier': 0.2048, 'loss_box_reg': 0.309, 'loss_objectness': 0.0145, 'loss_rpn_box_reg': 0.0151} lr 0.00321 0.41 с/it
+epoch 2 it 3600/8088 loss 0.7644 {'loss_classifier': 0.2974, 'loss_box_reg': 0.4041, 'loss_objectness': 0.0267, 'loss_rpn_box_reg': 0.0363} lr 0.00311 0.41 с/it
+epoch 2 it 3700/8088 loss 0.4973 {'loss_classifier': 0.1806, 'loss_box_reg': 0.2875, 'loss_objectness': 0.0083, 'loss_rpn_box_reg': 0.021} lr 0.00301 0.41 с/it
+epoch 2 it 3800/8088 loss 0.7835 {'loss_classifier': 0.3061, 'loss_box_reg': 0.4159, 'loss_objectness': 0.0198, 'loss_rpn_box_reg': 0.0417} lr 0.00292 0.41 с/it
+epoch 2 it 3900/8088 loss 0.7698 {'loss_classifier': 0.304, 'loss_box_reg': 0.4213, 'loss_objectness': 0.0085, 'loss_rpn_box_reg': 0.036} lr 0.00282 0.41 с/it
+epoch 2 it 4000/8088 loss 0.7072 {'loss_classifier': 0.2771, 'loss_box_reg': 0.3884, 'loss_objectness': 0.0147, 'loss_rpn_box_reg': 0.0269} lr 0.00272 0.41 с/it
+epoch 2: loss 0.7801 val mAP 0.1719 AP50 0.3710 (32.0 хв, пропущено батчів 0)
+epoch 3 it 4100/8088 loss 0.7873 {'loss_classifier': 0.3131, 'loss_box_reg': 0.3972, 'loss_objectness': 0.0396, 'loss_rpn_box_reg': 0.0374} lr 0.00262 0.49 с/it
+epoch 3 it 4200/8088 loss 0.4873 {'loss_classifier': 0.1969, 'loss_box_reg': 0.2631, 'loss_objectness': 0.0135, 'loss_rpn_box_reg': 0.0138} lr 0.00252 0.45 с/it
+epoch 3 it 4300/8088 loss 0.6042 {'loss_classifier': 0.2254, 'loss_box_reg': 0.3341, 'loss_objectness': 0.0248, 'loss_rpn_box_reg': 0.0199} lr 0.00242 0.43 с/it
+epoch 3 it 4400/8088 loss 0.6827 {'loss_classifier': 0.2562, 'loss_box_reg': 0.396, 'loss_objectness': 0.0079, 'loss_rpn_box_reg': 0.0226} lr 0.00232 0.42 с/it
+epoch 3 it 4500/8088 loss 0.7848 {'loss_classifier': 0.292, 'loss_box_reg': 0.4048, 'loss_objectness': 0.0165, 'loss_rpn_box_reg': 0.0716} lr 0.00222 0.42 с/it
+epoch 3 it 4600/8088 loss 0.5428 {'loss_classifier': 0.178, 'loss_box_reg': 0.3433, 'loss_objectness': 0.0031, 'loss_rpn_box_reg': 0.0184} lr 0.00212 0.42 с/it
+epoch 3 it 4700/8088 loss 0.5743 {'loss_classifier': 0.2022, 'loss_box_reg': 0.3453, 'loss_objectness': 0.0058, 'loss_rpn_box_reg': 0.0211} lr 0.00202 0.42 с/it
+epoch 3 it 4800/8088 loss 0.6538 {'loss_classifier': 0.2348, 'loss_box_reg': 0.3683, 'loss_objectness': 0.0183, 'loss_rpn_box_reg': 0.0324} lr 0.00193 0.42 с/it
+epoch 3 it 4900/8088 loss 0.6041 {'loss_classifier': 0.2218, 'loss_box_reg': 0.3399, 'loss_objectness': 0.0241, 'loss_rpn_box_reg': 0.0184} lr 0.00183 0.42 с/it
+epoch 3 it 5000/8088 loss 0.7437 {'loss_classifier': 0.2467, 'loss_box_reg': 0.4227, 'loss_objectness': 0.0238, 'loss_rpn_box_reg': 0.0504} lr 0.00173 0.41 с/it
+epoch 3 it 5100/8088 loss 0.7530 {'loss_classifier': 0.2916, 'loss_box_reg': 0.3923, 'loss_objectness': 0.026, 'loss_rpn_box_reg': 0.0432} lr 0.00164 0.41 с/it
+epoch 3 it 5200/8088 loss 0.5851 {'loss_classifier': 0.2144, 'loss_box_reg': 0.3205, 'loss_objectness': 0.0187, 'loss_rpn_box_reg': 0.0315} lr 0.00155 0.41 с/it
+epoch 3 it 5300/8088 loss 0.7667 {'loss_classifier': 0.2918, 'loss_box_reg': 0.3983, 'loss_objectness': 0.0274, 'loss_rpn_box_reg': 0.0492} lr 0.00146 0.41 с/it
+epoch 3 it 5400/8088 loss 0.7099 {'loss_classifier': 0.2719, 'loss_box_reg': 0.3605, 'loss_objectness': 0.0224, 'loss_rpn_box_reg': 0.0552} lr 0.00137 0.41 с/it
+epoch 3 it 5500/8088 loss 0.6943 {'loss_classifier': 0.2496, 'loss_box_reg': 0.372, 'loss_objectness': 0.0256, 'loss_rpn_box_reg': 0.0471} lr 0.00128 0.41 с/it
+epoch 3 it 5600/8088 loss 0.7701 {'loss_classifier': 0.2948, 'loss_box_reg': 0.4154, 'loss_objectness': 0.0185, 'loss_rpn_box_reg': 0.0414} lr 0.00120 0.41 с/it
+epoch 3 it 5700/8088 loss 0.7845 {'loss_classifier': 0.3171, 'loss_box_reg': 0.3731, 'loss_objectness': 0.0391, 'loss_rpn_box_reg': 0.0552} lr 0.00111 0.41 с/it
+epoch 3 it 5800/8088 loss 0.6344 {'loss_classifier': 0.2382, 'loss_box_reg': 0.3417, 'loss_objectness': 0.0228, 'loss_rpn_box_reg': 0.0316} lr 0.00103 0.41 с/it
+epoch 3 it 5900/8088 loss 0.7255 {'loss_classifier': 0.2507, 'loss_box_reg': 0.4144, 'loss_objectness': 0.0324, 'loss_rpn_box_reg': 0.0281} lr 0.00095 0.41 с/it
+epoch 3 it 6000/8088 loss 0.6521 {'loss_classifier': 0.2143, 'loss_box_reg': 0.4034, 'loss_objectness': 0.0145, 'loss_rpn_box_reg': 0.02} lr 0.00088 0.41 с/it
+epoch 3: loss 0.6940 val mAP 0.1705 AP50 0.3624 (48.2 хв, пропущено батчів 0)
+бюджет: наступна епоха не вміститься в 75 хв, зупиняюсь після епохи 3
+{"mAP": 0.1719484066561049, "AP50": 0.36967308284604644, "AP75": 0.13839189926978926, "AR": 0.41057494726209676, "n_val_frames": 2846, "n_gt": 114132, "n_det": 1414466, "AP_small": 0.07131100233554453, "AP_medium": 0.15317261998609, "AP_large": 0.3443381640577348, "fps": 6.062644016555024, "train_minutes": 48.34, "epochs": 3, "imgsz": 960, "best_epoch": 1, "best_val_mAP_curve": 0.17312066426096198, "iters": 6066, "batch_size": 4, "lr": 0.005}
+failures: {"missed_small": 11843, "duplicate": 2106, "confusion": 15019}

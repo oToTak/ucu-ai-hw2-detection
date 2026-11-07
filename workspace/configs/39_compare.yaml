@@ -1,3 +1,3 @@
 runner: compare
-runs: [05_baseline, 30_yolo_base, 31_yolo_imgsz_640, 31_yolo_imgsz, 32_yolo_loss, 10_frcnn_base, 11_frcnn_rpn, 12_frcnn_loss, 20_retina_base]
+runs: [05_baseline, 30_yolo_base, 31_yolo_imgsz_640, 31_yolo_imgsz, 32_yolo_loss, 10_frcnn_base, 11_frcnn_rpn, 12_frcnn_loss, 20_retina_base, 22_retina_focal]
 title: "Anchor-free (YOLO) проти anchor-based"

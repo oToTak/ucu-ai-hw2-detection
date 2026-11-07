@@ -1,0 +1,42 @@
+seed: 42
+imgsz: 960
+frame_step: 3
+val_step: 5
+mask_ignore: true
+ignore_fill: 114
+ignore_drop_ioa: 0.5
+num_workers: 2
+budget_minutes: 75
+ckpt_sync_minutes: 15
+conf: 0.001
+max_det: 500
+eval_batch: 8
+fps_frames: 100
+predict_test: true
+smoke_limits:
+  train_clips: 2
+  train_frames: 64
+  val_clips: 2
+  val_frames: 30
+  test_clips: 2
+  test_frames: 8
+  fps_frames: 5
+  epochs: 1
+  max_iters: 20
+runner: models.yolo
+model: yolo11s.pt
+epochs: 10
+batch: 16
+device: null
+train_args:
+  close_mosaic: 2
+  patience: 100
+  amp: true
+  cache: false
+  box: 7.5
+  cls: 0.5
+  dfl: 1.5
+  cls_pw: 0.0
+predict_args:
+  iou: 0.7
+run_id: 30_yolo_base

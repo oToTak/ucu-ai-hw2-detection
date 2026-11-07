@@ -1,0 +1,5 @@
+size,n_gt,rpn_recall,final_recall,post_nms_top_n_test
+all,4021,0.8781,0.6879,2000
+small,806,0.7543,0.5285,2000
+medium,2794,0.898,0.6961,2000
+large,421,0.9834,0.9382,2000

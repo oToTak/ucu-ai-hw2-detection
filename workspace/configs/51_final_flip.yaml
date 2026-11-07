@@ -1,0 +1,7 @@
+# T7, ефект інференсу 1 з 4: TTA флип (2 проходи), злиття WBF. Міняється лише tricks.tta.
+# Тривалість (ОЦІНКА): 2 x 6657 проходів ≈ 19 хв + WBF на CPU ≈ 0.4 год GPU.
+extends: 50_final
+
+tricks:
+  tta:
+    enabled: true

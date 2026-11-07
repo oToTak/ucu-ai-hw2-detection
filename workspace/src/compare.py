@@ -14,10 +14,15 @@
     plots/compare_sizes.png  AP small/medium/large за ранами (з per_size.csv)
     plots/compare_curves.png val_mAP за епохами (з train_log.csv)
 
+Якщо в конфізі `density: true`: mAP за щільністю сцени (density.csv, plots/compare_density.png).
+    density_bins: [e1, e2]   # межі за кількістю GT на кадр; за замовчуванням терцилі повного val
+Кадри повного val ділимо на low/mid/high, кожну групу оцінює спільний Evaluator.
+
 Нічого не падає, якщо частини ранів ще немає: такий ран пропускається, причина йде в print (log.txt).
 """
 import csv
 import json
+import math
 from pathlib import Path
 
 from . import common
@@ -180,6 +185,117 @@ def _safe_plot(name, fn, *args):
             plt.close("all")
 
 
+DENSITY_COLUMNS = ["run", "bin", "n_frames", "mean_objects", "mAP", "AP50", "AP_small"]
+
+
+def _present(value):
+    return value is not None and not (isinstance(value, float) and math.isnan(value))
+
+
+def _num(value):
+    if not _present(value):
+        return ""
+    if isinstance(value, float):
+        return f"{value:.6f}"
+    return value
+
+
+def _density_edges(cfg, counts):
+    """Межі low/mid/high за GT на кадр: density_bins з конфігу або терцилі повного val."""
+    import numpy as np
+
+    terciles = [float(np.quantile(counts, 1 / 3)), float(np.quantile(counts, 2 / 3))]
+    given = cfg.get("density_bins")
+    if given is None:
+        return terciles
+    try:
+        edges = [float(x) for x in given]
+    except (TypeError, ValueError):
+        edges = []
+    if len(edges) == 2 and edges[0] < edges[1]:
+        return edges
+    print(f"compare: density_bins має бути двома зростаючими числами, беру терцилі: {terciles}")
+    return terciles
+
+
+def _write_density_csv(rows, out_dir):
+    with open(out_dir / "density.csv", "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=DENSITY_COLUMNS)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({c: _num(row[c]) for c in DENSITY_COLUMNS})
+    print(f"compare: density → {out_dir / 'density.csv'} ({len(rows)} рядків)")
+
+
+def _plot_density(rows, path, title):
+    rows = [r for r in rows if _present(r["mAP"])]
+    if not rows:
+        print("compare: немає mAP за щільністю, compare_density.png пропущено")
+        return
+    bins = list(dict.fromkeys(r["bin"] for r in rows))
+    runs = list(dict.fromkeys(r["run"] for r in rows))
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    width = 0.8 / len(runs)
+    for i, run_name in enumerate(runs):
+        values = {r["bin"]: r["mAP"] for r in rows if r["run"] == run_name}
+        xs = [j + (i - (len(runs) - 1) / 2) * width for j in range(len(bins))]
+        ys = [values.get(b) if _present(values.get(b)) else 0.0 for b in bins]
+        ax.bar(xs, ys, width, label=run_name)
+    ax.set_xticks(range(len(bins)))
+    ax.set_xticklabels(bins, fontsize=8)
+    ax.set_xlabel("щільність: GT-об'єктів на кадр")
+    ax.set_ylabel("mAP (COCO)")
+    ax.set_ylim(bottom=0)
+    ax.set_title(f"mAP за щільністю сцени{': ' + title if title else ''}")
+    ax.grid(axis="y", alpha=0.3)
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+
+def _density(cfg, names, smoke, data_root, out_dir):
+    """mAP кожного рану на трьох групах кадрів повного val за кількістю GT-об'єктів."""
+    import numpy as np
+
+    from . import data, evaluator
+
+    frames = data.split_frames(cfg, data_root, "val", smoke, full=True)
+    counts = np.array([len(f["labels"]) for f in frames], np.float64)
+    rows = []
+    if counts.size:
+        e1, e2 = _density_edges(cfg, counts)
+        bins = [f"low (<={e1:g})", f"mid ({e1:g}..{e2:g}]", f"high (>{e2:g})"]
+        group_idx = np.where(counts <= e1, 0, np.where(counts <= e2, 1, 2))
+        groups = [[f for f, i in zip(frames, group_idx) if i == k] for k in range(3)]
+        means = [float(counts[group_idx == k].mean()) if groups[k] else None for k in range(3)]
+        # Evaluator будуємо один раз на групу: GT спільні для всіх ранів
+        evaluators = [
+            evaluator.Evaluator(g, max_det=cfg.get("max_det", 500)) if g else None for g in groups
+        ]
+        for name in names:
+            try:
+                preds = data.load_preds(common.find_preds(name, smoke))
+            except FileNotFoundError as e:
+                print(f"compare: density: {name}: немає preds_val, пропускаю ({e})")
+                continue
+            for k in range(3):
+                row = {"run": name, "bin": bins[k], "n_frames": len(groups[k]), "mean_objects": means[k],
+                       "mAP": None, "AP50": None, "AP_small": None}
+                if evaluators[k] is not None:
+                    res = evaluators[k].evaluate(preds)
+                    row.update(mAP=res["mAP"], AP50=res["AP50"], AP_small=res["AP_small"])
+                rows.append(row)
+    else:
+        print("compare: density: у val немає кадрів")
+    _write_density_csv(rows, out_dir)
+    if plt is None:
+        print("compare: matplotlib недоступний, compare_density.png не буде")
+    else:
+        _safe_plot("compare_density", _plot_density, rows, out_dir / "plots" / "compare_density.png",
+                   cfg.get("title", ""))
+
+
 def run(cfg, out_dir, data_root, smoke):
     out_dir = Path(out_dir)
     (out_dir / "plots").mkdir(parents=True, exist_ok=True)
@@ -189,6 +305,11 @@ def run(cfg, out_dir, data_root, smoke):
     runs = [r for r in (_load_run(n, smoke) for n in names) if r]
     print(f"compare: знайдено {len(runs)} з {len(names)} ранів")
     _write_table(runs, out_dir)
+    if cfg.get("density"):
+        try:
+            _density(cfg, names, smoke, data_root, out_dir)
+        except Exception as e:  # щільність не має валити ран
+            print(f"compare: density не порахований: {e!r}")
     title = cfg.get("title", "")
     if plt is None:
         print("compare: matplotlib недоступний, графіків не буде")

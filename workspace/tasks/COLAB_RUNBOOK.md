@@ -18,12 +18,14 @@
 |---|---|---|
 | [0_smoke_all](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/0_smoke_all.ipynb) | спільний smoke усіх нових ранів | ≈1 |
 | [1_baseline_twostage](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/1_baseline_twostage.ipynb) | `05_baseline`, `1?_*` | 4.25 |
-| [2_anchor](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/2_anchor.ipynb) | `2?_*` | 3.75 |
+| [2_anchor](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/2_anchor.ipynb) | `2?_*` | 4.25 |
 | [3_yolo_custom](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/3_yolo_custom.ipynb) | `3?_*`, `8?_*` | 6.5 |
-| [4_detr](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/4_detr.ipynb) | `4?_*` | 3.75 |
-| [5_final_temporal_viz](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/5_final_temporal_viz.ipynb) | `5?_*`, `6?_*`, `7?_*`, лише після вибору моделей | ≈5 |
+| [4_detr](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/4_detr.ipynb) | `4?_*` | 4 |
+| [0_smoke_final](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/0_smoke_final.ipynb) | smoke фінальних ранів на реальних вагах 41 | ≈0.5 |
+| [5_final_temporal_viz](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/5_final_temporal_viz.ipynb) | `50`, `51`, `52`, `55`, `53`, `54` | ≈5 |
+| [6_combo_temporal_viz](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/6_combo_temporal_viz.ipynb) | `56`, `6?_*`, `7?_*`, `?9_compare`, `59_summary`, лише після 3 і 5 | ≈1.5 |
 
-Години орієнтовні, швидкість T4 ще не заміряна.
+Години орієнтовні: їх пораховано за кількома десятками ітерацій зі smoke, а не за повними епохами.
 
 ## Запуск
 

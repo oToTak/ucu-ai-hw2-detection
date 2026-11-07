@@ -19,3 +19,12 @@
 
 **Правки чужих файлів:** немає. **requirements:** без змін.
 **Автору:** SMOKE = True з `COMPUTE=["70_visualization"]` після smoke-ранів 10_* і 40_*; потім справжній ран, коли ваги є.
+
+## B2-bis: зворотне логування в W&B (`wandb_backfill`)
+**Зроблено:** `src/wandb_backfill.py`, `configs/71_wandb_backfill.yaml`. Не перевірено (Python недоступний у сесії): код звірено читанням, перший запуск = SMOKE на Colab. Чужі файли не чіпав; `common._wandb_key` лише викликається.
+**Що логує** (один W&B-ран на ран із `RESULTS`, де є `metrics.json`; за замовчуванням префікси 0,1,2,3,4,5,8 без runner-ів compare/summary/eda/visualization/wandb_backfill/temporal): `config.yaml` як config; криві `train_log.csv` (step = epoch); `metrics.json` у summary; таблиці `per_size`, `per_class`; `val_predictions` (8 кадрів, рамки передбачень зі score >= 0.3 і GT як `wandb.Image boxes`); `plots/*.png`.
+**Дублікати:** `common.wandb_init` називає ран `run_id` (SMOKE: `_smoke_<run_id>`) зі ВИПАДКОВИМ id. Backfill має id `bf-<run_id>` (SMOKE `bfsmoke-<run_id>`) і `resume="allow"`; перед логуванням через `wandb.Api` шукає ран з тим самим name і іншим id (залогований наживо) і пропускає його. Повторний запуск оновлює той самий ран; точки кривих з уже наявними кроками W&B ігнорує з попередженням, таблиці й картинки додаються знову.
+**Без ключа:** повідомлення в log.txt, `metrics.json` має `skipped_no_key` = число кандидатів, ран не падає. У SMOKE: <= 2 рани, 2 кадри, name з префіксом `_smoke_`.
+**metrics.json:** `candidates, logged, skipped_live, skipped_no_key, errors, wandb_url` (`https://wandb.ai/<entity>/ucu-ai-hw2-detection`).
+**Автору:** (1) Colab: Secrets -> додати `WANDB_API_KEY`, увімкнути доступ ноутбука. (2) `COMPUTE=["71_wandb_backfill"]`, спершу SMOKE. (3) Посилання на проєкт: `wandb_url` у `results/71_wandb_backfill/metrics.json` або `wandb.ai/<логін>/ucu-ai-hw2-detection`. (4) Публічність: wandb.ai -> проєкт -> Settings -> Project visibility = Public (у personal-акаунті доступно; у team залежить від налаштувань команди). Інакше додати викладачів у team або дати посилання на окремі ран-и. Перевірити посилання у вікні інкогніто.
+**Ризик:** `wandb.Image(boxes=...)` з `domain: pixel` і числовими `class_labels` за документацією W&B, не запускалось; `api.default_entity` для перевірки дублікатів, при збої перевірка пропускається (можливі дублікати кривих).

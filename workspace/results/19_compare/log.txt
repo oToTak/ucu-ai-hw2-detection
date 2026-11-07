@@ -1,0 +1,2 @@
+compare: знайдено 3 з 3 ранів
+compare: таблиця → /content/hw2_work/19_compare/compare.csv (3 рядків)

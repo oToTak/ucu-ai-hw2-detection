@@ -18,6 +18,9 @@ title: "Усі моделі"   # необов'язково
 ```
 Сканує `common.RESULTS/*/metrics.json` (без тек з `_`; у SMOKE `common.SMOKE_RESULTS/*`). Виходи: `summary.csv` (відсортовано за mAP, з git/started/smoke із meta.json), `plots/summary_map.png`, `plots/summary_speed.png` (mAP проти fps).
 
+**Density (`density: true` у `?9_compare.yaml`):** кадри повного val (`data.split_frames(..., "val", full=True)`) за кількістю GT на кадр ділимо на low/mid/high. Межі: `density_bins: [e1, e2]`, за замовчуванням терцилі val (однакові для всіх ранів). Для кожного рану з `common.find_preds` читаю `data.load_preds`, оцінюю групи спільним `evaluator.Evaluator` (max_det з протоколу). Вихід: `density.csv` (`run, bin, n_frames, mean_objects, mAP, AP50, AP_small`) і `plots/compare_density.png`. Ран без preds пропускається з повідомленням. Без `density` поведінка не змінюється.
+**Не перевірено (Python недоступний):** density лише читанням коду. Перший smoke на Colab — перевірка.
+
 **Поведінка без даних:** ран без `metrics.json` пропускається з рядком у `log.txt`; порожній список дає csv з заголовком і без падіння; помилка окремого графіка ловиться і друкується.
 
 **Ключі, які читаю (контракт `src/CLAUDE.md`):** `mAP, AP50, AP75, AP_small, AP_medium, AP_large, AR, fps, train_minutes, epochs, imgsz, n_val_frames`; у `per_size.csv` — `size, AP`; у `train_log.csv` — `epoch, val_mAP`.

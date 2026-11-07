@@ -23,3 +23,10 @@
 - 2026-11-06 · [VZ/B2] src/visualization.py (Grad-CAM Faster R-CNN і RT-DETR власним кодом, RoI-ембедінги + t-SNE) і configs/70_visualization.yaml; відсутні ваги = пропуск частини, metrics.json завжди; py_compile і load_config ок, не запускалось.
 - 2026-11-06 · [CA/B3] custom.py, конфіги 80_custom_arch (P2), 81_custom_nwd (NWD), 89_compare, handoff/CA.md; перевірено лише py_compile і load_config, не запускалось.
 - 2026-11-06 · [оркестратор] W2 і W3 написані, запусків не було; ноутбуки перебудовано під спільний smoke `0_smoke_all`, заглушки 50/60/70 винесено в окремий ноутбук; чекає на коміт і smoke.
+- 2026-11-07 · [оркестратор] Smoke 0_smoke_all: 20 ранів без падінь; за заміряними швидкостями 1x epochs 3, RT-DETR epochs 3, стеля бюджету 1x, 2x, 4x 90 хв; чекає на коміт і справжні запуски.
+- 2026-11-07 · [оркестратор] Результати 1x–4x отримано, найкраща 41_rtdetr_queries (mAP 0.2492); правки epochs і budget відкочено, бо рани йшли без них; PP готує T7 етап 2.
+- 2026-11-07 · [PP/T7 етап 2] configs 50-52, 55, 56 (інференс на 41), 53 і 54 (RT-DETR з завершеним LR та 1280), 59_summary, 60 на 41, 70 на 11/41; ноутбуки 5_final із явним порядком і 0_smoke_final; лише читання коду, Python у сесії недоступний.
+- 2026-11-07 · [оркестратор] Фінал розбито на ноутбуки 5 і 6, додано 0_smoke_final; чекає на коміт, smoke і public score рану 41.
+- 2026-11-07 · [AG/AG-код] compare.py: density (mAP за щільністю сцени, density.csv + compare_density.png) за ключем density: true; py_compile недоступний, перевірено читанням коду.
+- 2026-11-07 · [VZ/B2] src/wandb_backfill.py і configs/71_wandb_backfill.yaml: зворотне логування готових ранів у W&B (config, криві, summary, таблиці, val з рамками, plots; id bf-<run_id>, без дублікатів наживо); не запускалось, py_compile недоступний.
+- 2026-11-07 · [оркестратор] Перший сабмит вище бейзлайну; додано W&B backfill і mAP за щільністю; результати 1x-4x розпаковано в results/; чекає на коміт і нову сесію Colab.

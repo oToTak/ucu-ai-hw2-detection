@@ -1,0 +1,5 @@
+# T7: зведена таблиця всіх ранів (0x-8x і нові 5x): summary.csv, plots/summary_map.png, plots/summary_speed.png.
+# Runner сам сканує results/*/metrics.json, список ранів не потрібен. Іде в COMPUTE ОСТАННІМ.
+# Вибір двох фінальних сабмітів за власною валідацією (D9) робить автор за цією таблицею.
+runner: summary
+title: "Усі моделі та трюки"

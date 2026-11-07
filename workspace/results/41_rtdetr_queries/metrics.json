@@ -1,0 +1,23 @@
+{
+  "mAP": 0.24923535767776847,
+  "AP50": 0.4713908138096346,
+  "AP75": 0.2291829083560564,
+  "AR": 0.37260137341201094,
+  "n_val_frames": 2846,
+  "n_gt": 114132,
+  "n_det": 426900,
+  "AP_small": 0.11829882350821685,
+  "AP_medium": 0.2093526063233255,
+  "AP_large": 0.43834493750125747,
+  "fps": 12.0006419825029,
+  "train_minutes": 62.72499470710754,
+  "epochs": 3,
+  "imgsz": 960,
+  "model": "/content/hw2_work/41_rtdetr_queries/rtdetr_nq150.yaml",
+  "mAP_native_last": 0.22581,
+  "best_val_mAP_step": 0.2545071502380335,
+  "converged": true,
+  "converged_note": "\u043d\u0430\u0439\u043a\u0440\u0430\u0449\u0438\u0439 val_mAP 0.2545 >= 0.02, \u043e\u0441\u0442\u0430\u043d\u043d\u044f \u0435\u043f\u043e\u0445\u0430 \u043d\u0435 \u043e\u0431\u0432\u0430\u043b\u0438\u043b\u0430\u0441\u044c",
+  "num_queries": 150,
+  "backbone_lr_mult": 1.0
+}

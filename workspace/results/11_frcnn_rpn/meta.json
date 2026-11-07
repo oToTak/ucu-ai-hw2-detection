@@ -1,0 +1,7 @@
+{
+  "run": "11_frcnn_rpn",
+  "git": "54c9ed7",
+  "started": "2026-11-07T10:31:09+00:00",
+  "smoke": false,
+  "resumes": 1
+}

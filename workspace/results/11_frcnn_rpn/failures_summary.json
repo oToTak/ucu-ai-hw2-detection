@@ -1,0 +1,87 @@
+{
+  "score_thr": 0.3,
+  "iou_thr": 0.5,
+  "n_gt": 114132,
+  "missed_small": {
+    "count": 11062,
+    "by_size": {
+      "small": 11062,
+      "medium": 0,
+      "large": 0
+    },
+    "by_gt_class": {
+      "person": 7045,
+      "bicycle": 114,
+      "car": 943,
+      "van": 130,
+      "truck": 38,
+      "tricycle": 501,
+      "motor": 2291
+    },
+    "top_pairs": [],
+    "occluded_share": 0.71,
+    "truncated_share": 0.041
+  },
+  "duplicate": {
+    "count": 2339,
+    "by_size": {
+      "small": 163,
+      "medium": 2067,
+      "large": 109
+    },
+    "by_gt_class": {
+      "person": 1938,
+      "bicycle": 11,
+      "car": 341,
+      "van": 1,
+      "truck": 10,
+      "tricycle": 3,
+      "motor": 35
+    },
+    "top_pairs": [],
+    "occluded_share": 0.687,
+    "truncated_share": 0.013
+  },
+  "confusion": {
+    "count": 16949,
+    "by_size": {
+      "small": 2671,
+      "medium": 11169,
+      "large": 3109
+    },
+    "by_gt_class": {
+      "person": 931,
+      "bicycle": 3754,
+      "car": 1690,
+      "van": 4265,
+      "truck": 291,
+      "tricycle": 2473,
+      "bus": 297,
+      "motor": 3248
+    },
+    "top_pairs": [
+      [
+        "van->car",
+        3867
+      ],
+      [
+        "bicycle->motor",
+        3017
+      ],
+      [
+        "motor->person",
+        2283
+      ],
+      [
+        "car->van",
+        1182
+      ],
+      [
+        "tricycle->car",
+        1024
+      ]
+    ],
+    "occluded_share": 0.603,
+    "truncated_share": 0.065
+  }
+}
