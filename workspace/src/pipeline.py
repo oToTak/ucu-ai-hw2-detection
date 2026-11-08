@@ -20,7 +20,7 @@ WORKSPACE = Path(__file__).resolve().parents[1]
 CONFIGS = WORKSPACE / "configs"
 RESULTS = common.RESULTS
 LOG_TAIL_LINES = 15
-ALWAYS_RECOMPUTE = {"compare", "summary"}  # ці ранери зводять чужі результати
+ALWAYS_RECOMPUTE = {"compare", "summary", "wandb_backfill"}  # ці ранери зводять чужі результати
 FAILED_LOGS = ("log.txt", "meta.json", "config.yaml", "train_log.csv")
 
 _compute = []

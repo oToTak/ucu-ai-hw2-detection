@@ -1,0 +1,2 @@
+WARNING ⚠️ no model scale passed. Assuming scale='l'.
+Optimizer stripped from /content/hw2_work/54_rtdetr_1280/weights/best.pt, 66.5MB

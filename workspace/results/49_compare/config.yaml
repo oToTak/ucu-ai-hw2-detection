@@ -32,4 +32,5 @@ runs:
 - 41_rtdetr_queries
 - 42_rtdetr_lr
 title: Query-based (RT-DETR) проти CNN
+density: true
 run_id: 49_compare

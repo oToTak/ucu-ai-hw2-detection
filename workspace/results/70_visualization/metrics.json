@@ -1,0 +1,14 @@
+{
+  "parts": {
+    "gradcam_frcnn": "ok: 4 кадрів",
+    "embeddings_frcnn": "ok: 723 рамок",
+    "gradcam_rtdetr": "ok: 4 кадрів"
+  },
+  "images": [
+    "gradcam_frcnn.png",
+    "embeddings_frcnn.png",
+    "gradcam_rtdetr.png"
+  ],
+  "n_val_frames_pool": 571,
+  "wandb_url": null
+}

@@ -112,9 +112,12 @@ def _set_env():
     )
 
 
-def setup():
-    """GPU, Drive, дані на локальний диск, залежності, env. Повторний виклик безпечний."""
-    _check_gpu()
+def setup(gpu=True):
+    """GPU, Drive, дані на локальний диск, залежності, env. Повторний виклик безпечний.
+
+    gpu=False: для CPU-ранів (W&B backfill, compare, summary), коли ліміт GPU вичерпано."""
+    if gpu:
+        _check_gpu()
     _mount_drive()
     _prepare_data()
     _install_requirements()

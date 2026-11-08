@@ -1,0 +1,3 @@
+compare: 81_custom_nwd: немає metrics.json у /content/drive/MyDrive/hw2/results/81_custom_nwd, пропускаю
+compare: знайдено 3 з 4 ранів
+compare: таблиця → /content/hw2_work/89_compare/compare.csv (3 рядків)

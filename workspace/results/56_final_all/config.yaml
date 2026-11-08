@@ -1,0 +1,56 @@
+seed: 42
+imgsz: 960
+frame_step: 3
+val_step: 5
+mask_ignore: true
+ignore_fill: 114
+ignore_drop_ioa: 0.5
+num_workers: 2
+budget_minutes: 75
+ckpt_sync_minutes: 15
+conf: 0.001
+max_det: 500
+eval_batch: 8
+fps_frames: 100
+predict_test: true
+smoke_limits:
+  train_clips: 2
+  train_frames: 64
+  val_clips: 2
+  val_frames: 30
+  test_clips: 2
+  test_frames: 8
+  fps_frames: 5
+  epochs: 1
+  max_iters: 20
+runner: final
+weights_from: 54_rtdetr_1280
+val_full: true
+tricks:
+  tta:
+    enabled: true
+    flip: true
+    scales:
+    - 1.0
+  sahi:
+    enabled: true
+    slice_size: 1344
+    overlap: 0.2
+    slice_imgsz: null
+    edge_px: 3
+    tile_batch: 16
+    pre_nms: 5000
+    nms_iou: 0.5
+    nms_metric: iou
+    source_max_det: 1000
+  merge:
+    method: wbf
+    iou_thr: 0.6
+    skip_box_thr: 0.0
+    conf_type: avg
+    nms_metric: iou
+    soft_method: gaussian
+    sigma: 0.5
+    linear_iou_thr: 0.3
+    score_thr: 0.001
+run_id: 56_final_all

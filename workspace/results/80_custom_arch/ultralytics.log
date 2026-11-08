@@ -1,0 +1,106 @@
+New https://pypi.org/project/ultralytics/8.4.207 available 😃 Update with 'pip install -U ultralytics'
+Ultralytics 8.4.203 🚀 Python-3.13.16 torch-2.14.1+cu130 CUDA:0 (Tesla T4, 14913MiB)
+[34m[1mengine/trainer: [0magnostic_nms=False, amp=True, angle=1.0, augment=False, auto_augment=randaugment, batch=16, bgr=0.0, box=7.5, cache=False, cfg=None, channels_last=None, classes=None, close_mosaic=2, cls=0.5, cls_pw=0.0, cls_remap=True, compile=False, conf=None, copy_paste=0.0, copy_paste_mode=flip, cos_lr=False, cutmix=0.0, data=/content/hw2_work/80_custom_arch/dataset/data.yaml, degrees=0.0, deterministic=False, device=, dfl=1.5, dgrad=0.5, dis=6.0, distill_model=None, dlam=1.0, dlog=1.0, dnn=False, dropout=0.0, dynamic=False, embed=None, epochs=10, erasing=0.4, exist_ok=True, fliplr=0.5, flipud=0.0, format=torchscript, fraction=1.0, freeze=None, hsv_h=0.015, hsv_s=0.7, hsv_v=0.4, imgsz=960, iou=0.7, kobj=1.0, line_width=None, lr0=0.01, lrf=0.01, mask_ratio=4, max_det=300, mixup=0.0, mode=train, model=/content/hw2_work/80_custom_arch/dataset/seed.pt, momentum=0.937, mosaic=1.0, multi_scale=0.0, name=train, nbs=64, nms=None, opset=None, optimize=False, optimizer=auto, overlap_mask=True, patience=100, perspective=0.0, plots=False, pose=12.0, pretrained=True, profile=False, project=/content/hw2_work/80_custom_arch/dataset/ultralytics, quantize=None, rect=False, resume=False, retina_masks=False, rle=1.0, save=True, save_conf=False, save_crop=False, save_dir=/content/hw2_work/80_custom_arch/dataset/ultralytics/train, save_frames=False, save_json=False, save_period=-1, save_txt=False, scale=0.5, seed=42, shear=0.0, show=False, show_boxes=True, show_conf=True, show_labels=True, simplify=True, single_cls=False, source=None, split=val, stream_buffer=False, task=detect, time=None, tracker=tracktrack.yaml, translate=0.1, val=True, verbose=True, vid_stride=1, visualize=False, warmup_bias_lr=0.1, warmup_epochs=3.0, warmup_momentum=0.8, weight_decay=0.0005, workers=2, workspace=None
+Overriding model.yaml nc=80 with nc=8
+
+                   from  n    params  module                                       arguments                     
+  0                  -1  1       928  ultralytics.nn.modules.conv.Conv             [3, 32, 3, 2]                 
+  1                  -1  1     18560  ultralytics.nn.modules.conv.Conv             [32, 64, 3, 2]                
+  2                  -1  1     26080  ultralytics.nn.modules.block.C3k2            [64, 128, 1, False, 0.25]     
+  3                  -1  1    147712  ultralytics.nn.modules.conv.Conv             [128, 128, 3, 2]              
+  4                  -1  1    103360  ultralytics.nn.modules.block.C3k2            [128, 256, 1, False, 0.25]    
+  5                  -1  1    590336  ultralytics.nn.modules.conv.Conv             [256, 256, 3, 2]              
+  6                  -1  1    346112  ultralytics.nn.modules.block.C3k2            [256, 256, 1, True]           
+  7                  -1  1   1180672  ultralytics.nn.modules.conv.Conv             [256, 512, 3, 2]              
+  8                  -1  1   1380352  ultralytics.nn.modules.block.C3k2            [512, 512, 1, True]           
+  9                  -1  1    656896  ultralytics.nn.modules.block.SPPF            [512, 512, 5]                 
+ 10                  -1  1    990976  ultralytics.nn.modules.block.C2PSA           [512, 512, 1]                 
+ 11                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 12             [-1, 6]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 13                  -1  1    443776  ultralytics.nn.modules.block.C3k2            [768, 256, 1, False]          
+ 14                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 15             [-1, 4]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 16                  -1  1    127680  ultralytics.nn.modules.block.C3k2            [512, 128, 1, False]          
+ 17                  -1  1    147712  ultralytics.nn.modules.conv.Conv             [128, 128, 3, 2]              
+ 18            [-1, 13]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 19                  -1  1    345472  ultralytics.nn.modules.block.C3k2            [384, 256, 1, False]          
+ 20                  -1  1    590336  ultralytics.nn.modules.conv.Conv             [256, 256, 3, 2]              
+ 21            [-1, 10]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 22                  -1  1   1511424  ultralytics.nn.modules.block.C3k2            [768, 512, 1, True]           
+ 23                  16  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 24             [-1, 2]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 25                  -1  1     32096  ultralytics.nn.modules.block.C3k2            [256, 64, 1, False]           
+ 26    [16, 19, 22, 25]  1    928880  ultralytics.nn.modules.head.Detect           [8, 16, None, [128, 256, 512, 64]]
+YOLO11s-p2 summary: 205 layers, 9,569,360 parameters, 9,569,344 gradients, 28.8 GFLOPs
+
+Remapped 5/8 cls head rows from pretrained weights by class name
+Transferred 563/563 items from pretrained weights
+Freezing layer 'model.26.dfl.conv.weight'
+[34m[1mAMP: [0mrunning Automatic Mixed Precision (AMP) checks...
+[34m[1mAMP: [0mchecks passed ✅
+[34m[1mtrain: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 101.4±43.8 MB/s, size: 186.5 KB)
+[34m[1mtrain: [0mNew cache created: /tmp/hw2_cache/masked_b5440aaa6d55/labels/uav0000013_00000_v.cache
+[34m[1malbumentations: [0mBlur(p=0.01, blur_limit=(3, 7)), MedianBlur(p=0.01, blur_limit=(3, 7)), ToGray(p=0.01, method='weighted_average', num_output_channels=3), CLAHE(p=0.01, clip_limit=(1.0, 4.0), tile_grid_size=(8, 8))
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 2821.5±1124.0 MB/s, size: 306.3 KB)
+[34m[1mval: [0mNew cache created: /content/data/val/labels/uav0000086_00000_v.cache
+[34m[1moptimizer:[0m 'optimizer=auto' found, ignoring 'lr0=0.01' and determining best 'optimizer' and 'lr0' automatically... 
+[34m[1moptimizer:[0m AdamW(lr=0.000833, momentum=0.9) with parameter groups 91 weight(decay=0.0), 100 weight(decay=0.0005), 99 bias(decay=0.0)
+Using 8090 train, 571 val images for fraction=1.0 at imgsz=960
+Using 2 dataloader workers
+Logging results to [1m/content/hw2_work/80_custom_arch/dataset/ultralytics/train[0m
+Starting training for 10 epochs...
+WARNING ⚠️ CUDA out of memory in TaskAlignedAssigner with batch_size=16 and max_num_obj=202; retrying assignment one image at a time on GPU. Model forward batch size is unchanged.
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+WARNING ⚠️ CUDA out of memory with batch=16. Reducing to batch=8 and retrying (1/3).
+[34m[1mtrain: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 539.2±793.3 MB/s, size: 156.1 KB)
+[34m[1malbumentations: [0mBlur(p=0.01, blur_limit=(3, 7)), MedianBlur(p=0.01, blur_limit=(3, 7)), ToGray(p=0.01, method='weighted_average', num_output_channels=3), CLAHE(p=0.01, clip_limit=(1.0, 4.0), tile_grid_size=(8, 8))
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 1714.3±1521.8 MB/s, size: 260.0 KB)
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all        571      22906      0.418       0.35      0.313      0.155
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all        571      22906      0.474      0.376      0.331      0.172
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all        571      22906      0.469      0.331      0.323      0.163
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all        571      22906       0.49      0.367      0.354      0.184
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all        571      22906       0.46      0.371      0.336      0.166
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all        571      22906       0.48       0.36      0.333      0.168
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all        571      22906      0.506      0.351      0.332       0.17
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all        571      22906      0.508      0.341      0.334      0.169
+Closing dataloader mosaic
+[34m[1malbumentations: [0mBlur(p=0.01, blur_limit=(3, 7)), MedianBlur(p=0.01, blur_limit=(3, 7)), ToGray(p=0.01, method='weighted_average', num_output_channels=3), CLAHE(p=0.01, clip_limit=(1.0, 4.0), tile_grid_size=(8, 8))
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all        571      22906      0.528      0.334      0.315       0.16
+
+9 epochs completed in 1.415 hours.
+Optimizer stripped from /content/hw2_work/80_custom_arch/dataset/ultralytics/train/weights/last.pt, 19.7MB
+Optimizer stripped from /content/hw2_work/80_custom_arch/dataset/ultralytics/train/weights/best.pt, 19.7MB
+
+Validating /content/hw2_work/80_custom_arch/dataset/ultralytics/train/weights/best.pt...
+Ultralytics 8.4.203 🚀 Python-3.13.16 torch-2.14.1+cu130 CUDA:0 (Tesla T4, 14913MiB)
+YOLO11s-p2 summary (fused): 114 layers, 9,553,616 parameters, 0 gradients, 28.4 GFLOPs
+                   all        571      22906       0.49      0.367      0.353      0.184
+                person        557      10089      0.505      0.646      0.589      0.244
+               bicycle        197       1213      0.527      0.323      0.327      0.132
+                   car        478       6393      0.701      0.593      0.593      0.376
+                   van        455       1371      0.632      0.253      0.327      0.201
+                 truck        197        271        0.4      0.185      0.228      0.144
+              tricycle        333       1099      0.546      0.307      0.364      0.184
+                   bus         37         53      0.232      0.189      0.111     0.0907
+                 motor        375       2417      0.381      0.437      0.289      0.101
+Speed: 0.3ms preprocess, 11.0ms inference, 0.0ms loss, 3.8ms postprocess per image
+Optimizer stripped from /content/hw2_work/80_custom_arch/weights/best.pt, 19.7MB

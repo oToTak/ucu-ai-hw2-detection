@@ -1,0 +1,2 @@
+compare: знайдено 10 з 10 ранів
+compare: таблиця → /content/hw2_work/39_compare/compare.csv (10 рядків)

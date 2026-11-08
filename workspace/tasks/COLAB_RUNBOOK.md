@@ -24,6 +24,7 @@
 | [0_smoke_final](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/0_smoke_final.ipynb) | smoke фінальних ранів на реальних вагах 41 | ≈0.5 |
 | [5_final_temporal_viz](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/5_final_temporal_viz.ipynb) | `50`, `51`, `52`, `55`, `53`, `54` | ≈5 |
 | [6_combo_temporal_viz](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/6_combo_temporal_viz.ipynb) | `56`, `6?_*`, `7?_*`, `?9_compare`, `59_summary`, лише після 3 і 5 | ≈1.5 |
+| [7_wandb_cpu](https://colab.research.google.com/github/oToTak/ucu-ai-hw2-detection/blob/main/workspace/colab/7_wandb_cpu.ipynb) | `71_wandb_backfill` на CPU-рантаймі; потрібен `WANDB_API_KEY` у Secrets з Notebook access | ≈0.5 |
 
 Години орієнтовні: їх пораховано за кількома десятками ітерацій зі smoke, а не за повними епохами.
 

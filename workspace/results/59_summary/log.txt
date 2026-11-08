@@ -1,0 +1,7 @@
+summary: 19_compare: немає metrics.json, пропускаю
+summary: 29_compare: немає metrics.json, пропускаю
+summary: 39_compare: немає metrics.json, пропускаю
+summary: 49_compare: немає metrics.json, пропускаю
+summary: 89_compare: немає metrics.json, пропускаю
+summary: знайдено 25 ранів з metrics.json
+summary: таблиця → /content/hw2_work/59_summary/summary.csv (25 ранів)

@@ -1,0 +1,19 @@
+W&B: ключа немає, логування вимкнене
+baseline: mAP=0.2674 AP_small=0.1377 None
+g00: mAP=0.2704 AP_small=0.1392 {'window': 1, 'alpha': 0.3, 'short_penalty': 1.0, 'prop_thr': None}
+g01: mAP=0.2690 AP_small=0.1402 {'window': 1, 'alpha': 0.3, 'short_penalty': 1.0, 'prop_thr': 0.5}
+g02: mAP=0.2697 AP_small=0.1337 {'window': 1, 'alpha': 0.3, 'short_penalty': 0.7, 'prop_thr': None}
+g03: mAP=0.2674 AP_small=0.1336 {'window': 1, 'alpha': 0.3, 'short_penalty': 0.7, 'prop_thr': 0.5}
+g04: mAP=0.2719 AP_small=0.1388 {'window': 1, 'alpha': 0.6, 'short_penalty': 1.0, 'prop_thr': None}
+g05: mAP=0.2704 AP_small=0.1399 {'window': 1, 'alpha': 0.6, 'short_penalty': 1.0, 'prop_thr': 0.5}
+g06: mAP=0.2714 AP_small=0.1339 {'window': 1, 'alpha': 0.6, 'short_penalty': 0.7, 'prop_thr': None}
+g07: mAP=0.2690 AP_small=0.1341 {'window': 1, 'alpha': 0.6, 'short_penalty': 0.7, 'prop_thr': 0.5}
+g08: mAP=0.2713 AP_small=0.1392 {'window': 2, 'alpha': 0.3, 'short_penalty': 1.0, 'prop_thr': None}
+g09: mAP=0.2699 AP_small=0.1399 {'window': 2, 'alpha': 0.3, 'short_penalty': 1.0, 'prop_thr': 0.5}
+g10: mAP=0.2707 AP_small=0.1342 {'window': 2, 'alpha': 0.3, 'short_penalty': 0.7, 'prop_thr': None}
+g11: mAP=0.2684 AP_small=0.1339 {'window': 2, 'alpha': 0.3, 'short_penalty': 0.7, 'prop_thr': 0.5}
+g12: mAP=0.2737 AP_small=0.1390 {'window': 2, 'alpha': 0.6, 'short_penalty': 1.0, 'prop_thr': None}
+g13: mAP=0.2722 AP_small=0.1399 {'window': 2, 'alpha': 0.6, 'short_penalty': 1.0, 'prop_thr': 0.5}
+g14: mAP=0.2733 AP_small=0.1342 {'window': 2, 'alpha': 0.6, 'short_penalty': 0.7, 'prop_thr': None}
+g15: mAP=0.2708 AP_small=0.1339 {'window': 2, 'alpha': 0.6, 'short_penalty': 0.7, 'prop_thr': 0.5}
+{"mAP": 0.2736841116420335, "AP50": 0.5204602377424387, "AP75": 0.2504113045631467, "AP_small": 0.13899996089311242, "AP_medium": 0.24106227226353844, "AP_large": 0.4472670247178586, "AR": 0.39813334481598334, "n_det": 426900, "n_val_frames": 2846, "n_gt": 114132, "fps": null, "train_minutes": 0.0, "epochs": 0, "imgsz": 1280, "source": "54_rtdetr_1280", "best": "g12", "best_params": {"link_iou": 0.5, "max_gap": 1, "link_min_score": 0.01, "window": 2, "alpha": 0.6, "agg": "mean", "min_len": 2, "short_penalty": 1.0, "prop_thr": null, "prop_decay": 0.8, "prop_iou": 0.5, "prop_dir": "both"}, "baseline_mAP": 0.26735939075307846, "baseline_AP_small": 0.13773584321937565, "delta_mAP": 0.006324720888955027, "delta_AP_small": 0.0012641176737367699, "postprocess_seconds_val": 0.11256840900023235, "n_grid": 16}

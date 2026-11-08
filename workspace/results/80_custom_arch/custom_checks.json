@@ -1,0 +1,53 @@
+{
+ "arch": {
+  "name": "yolo11s-p2",
+  "transferred": 499,
+  "source_tensors": 499,
+  "new_tensors": 64,
+  "strides": [
+   8.0,
+   16.0,
+   32.0,
+   4.0
+  ],
+  "detect_inputs": [
+   128,
+   256,
+   512,
+   64
+  ],
+  "box_hidden": 64,
+  "cls_hidden": 128,
+  "tal_stride_val": 16.0
+ },
+ "smoke": false,
+ "config_diff": [
+  "arch",
+  "budget_minutes"
+ ],
+ "ultralytics_log": {
+  "oom_batch_reduced": 1,
+  "oom_assigner": 1,
+  "nms_time_limit": 0,
+  "resume_ignored_args": 0,
+  "transferred_line": "Transferred 563/563 items from pretrained weights"
+ },
+ "best_pt": {
+  "layers": 27,
+  "strides": [
+   8.0,
+   16.0,
+   32.0,
+   4.0
+  ],
+  "detect_inputs": [
+   128,
+   256,
+   512,
+   64
+  ],
+  "cls_hidden": 128,
+  "params": 9569360,
+  "gflops_at_imgsz": 65.253312
+ }
+}

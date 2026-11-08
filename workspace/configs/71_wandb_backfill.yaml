@@ -1,10 +1,12 @@
 # Зворотне логування готових ранів у W&B (src/wandb_backfill.py). Потрібен WANDB_API_KEY (Colab Secrets).
 # Не тренує, CPU, хвилини. Повторний запуск оновлює ті самі W&B-рани (id bf-<run_id>), дублікатів немає.
+# Рахується щоразу (pipeline.ALWAYS_RECOMPUTE): без ключа ран пише metrics.json зі skipped_no_key, і це не має його блокувати.
+# GPU не треба: ноутбук colab/7_wandb_cpu.ipynb.
 runner: wandb_backfill
 
 runs:                          # null = усі готові рани за run_prefixes мінус exclude_runners; або явний список
-run_prefixes: ["0", "1", "2", "3", "4", "5", "8"]   # детектори 0x-5x і 8x
-exclude_runners: [compare, summary, eda, visualization, wandb_backfill, temporal]
+run_prefixes: ["0", "1", "2", "3", "4", "5", "6", "7", "8"]   # детектори 0x-5x і 8x, temporal 6x, Grad-CAM і ембедінги 7x
+exclude_runners: [compare, summary, eda, wandb_backfill]   # visualization і temporal ідуть: їхні plots/*.png потрапляють у W&B
 n_frames: 8                    # кадрів val із рамками на ран, рівномірно по val
 score_thr: 0.3                 # поріг score для передбачених рамок
 display_side: 960              # довга сторона кадру

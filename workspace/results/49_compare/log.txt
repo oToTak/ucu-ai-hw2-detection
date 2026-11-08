@@ -1,2 +1,3 @@
 compare: знайдено 6 з 6 ранів
 compare: таблиця → /content/hw2_work/49_compare/compare.csv (6 рядків)
+compare: density → /content/hw2_work/49_compare/density.csv (18 рядків)
