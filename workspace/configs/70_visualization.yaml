@@ -3,7 +3,7 @@
 runner: visualization
 
 frcnn_run: 11_frcnn_rpn        # Grad-CAM по FPN + RoI-ембедінги (найкращий з 1x за повним val)
-rtdetr_run: 41_rtdetr_queries  # Grad-CAM по входах декодера (найкращий з 4x за повним val)
+rtdetr_run: 54_rtdetr_1280     # Grad-CAM по входах декодера (найкраща RT-DETR; був 41_rtdetr_queries)
 n_frames: 4                    # кадрів val у кожній картинці Grad-CAM (рівномірно по val)
 embed_frames: 40               # кадрів val для RoI-ембедінгів
 embed_per_class: 150           # GT-рамок на клас (менше, якщо клас рідкісний)

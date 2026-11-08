@@ -1,0 +1,83 @@
+WARNING ⚠️ no model scale passed. Assuming scale='l'.
+New https://pypi.org/project/ultralytics/8.4.207 available 😃 Update with 'pip install -U ultralytics'
+Ultralytics 8.4.203 🚀 Python-3.13.16 torch-2.14.1+cu130 CUDA:0 (Tesla T4, 14913MiB)
+[34m[1mengine/trainer: [0magnostic_nms=False, amp=True, angle=1.0, augment=False, auto_augment=randaugment, batch=4, bgr=0.0, box=7.5, cache=False, cfg=None, channels_last=None, classes=None, close_mosaic=1, cls=0.5, cls_pw=0.0, cls_remap=True, compile=False, conf=None, copy_paste=0.0, copy_paste_mode=flip, cos_lr=False, cutmix=0.0, data=/content/hw2_work/53_rtdetr_sched/dataset/data.yaml, degrees=0.0, deterministic=False, device=, dfl=1.5, dgrad=0.5, dis=6.0, distill_model=None, dlam=1.0, dlog=1.0, dnn=False, dropout=0.0, dynamic=False, embed=None, epochs=3, erasing=0.4, exist_ok=True, fliplr=0.5, flipud=0.0, format=torchscript, fraction=1.0, freeze=None, hsv_h=0.015, hsv_s=0.7, hsv_v=0.4, imgsz=960, iou=0.7, kobj=1.0, line_width=None, lr0=0.0001, lrf=0.01, mask_ratio=4, max_det=300, mixup=0.0, mode=train, model=/content/hw2_work/53_rtdetr_sched/rtdetr_nq150.yaml, momentum=0.9, mosaic=1.0, multi_scale=0.0, name=train, nbs=16, nms=None, opset=None, optimize=False, optimizer=AdamW, overlap_mask=True, patience=100, perspective=0.0, plots=False, pose=12.0, pretrained=rtdetr-l.pt, profile=False, project=/content/hw2_work/53_rtdetr_sched/dataset/ultralytics, quantize=None, rect=False, resume=False, retina_masks=False, rle=1.0, save=True, save_conf=False, save_crop=False, save_dir=/content/hw2_work/53_rtdetr_sched/dataset/ultralytics/train, save_frames=False, save_json=False, save_period=-1, save_txt=False, scale=0.5, seed=42, shear=0.0, show=False, show_boxes=True, show_conf=True, show_labels=True, simplify=True, single_cls=False, source=None, split=val, stream_buffer=False, task=detect, time=None, tracker=tracktrack.yaml, translate=0.1, val=True, verbose=True, vid_stride=1, visualize=False, warmup_bias_lr=0.0, warmup_epochs=0.5, warmup_momentum=0.8, weight_decay=0.0001, workers=2, workspace=None
+Overriding model.yaml nc=80 with nc=8
+WARNING ⚠️ no model scale passed. Assuming scale='l'.
+
+                   from  n    params  module                                       arguments                     
+  0                  -1  1     25248  ultralytics.nn.modules.block.HGStem          [3, 32, 48]                   
+  1                  -1  6    155072  ultralytics.nn.modules.block.HGBlock         [48, 48, 128, 3, 6]           
+  2                  -1  1      1408  ultralytics.nn.modules.conv.DWConv           [128, 128, 3, 2, 1, False]    
+  3                  -1  6    839296  ultralytics.nn.modules.block.HGBlock         [128, 96, 512, 3, 6]          
+  4                  -1  1      5632  ultralytics.nn.modules.conv.DWConv           [512, 512, 3, 2, 1, False]    
+  5                  -1  6   1695360  ultralytics.nn.modules.block.HGBlock         [512, 192, 1024, 5, 6, True, False]
+  6                  -1  6   2055808  ultralytics.nn.modules.block.HGBlock         [1024, 192, 1024, 5, 6, True, True]
+  7                  -1  6   2055808  ultralytics.nn.modules.block.HGBlock         [1024, 192, 1024, 5, 6, True, True]
+  8                  -1  1     11264  ultralytics.nn.modules.conv.DWConv           [1024, 1024, 3, 2, 1, False]  
+  9                  -1  6   6708480  ultralytics.nn.modules.block.HGBlock         [1024, 384, 2048, 5, 6, True, False]
+ 10                  -1  1    524800  ultralytics.nn.modules.conv.Conv             [2048, 256, 1, 1, None, 1, 1, False]
+ 11                  -1  1    789760  ultralytics.nn.modules.transformer.AIFI      [256, 1024, 8]                
+ 12                  -1  1     66048  ultralytics.nn.modules.conv.Conv             [256, 256, 1, 1]              
+ 13                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 14                   7  1    262656  ultralytics.nn.modules.conv.Conv             [1024, 256, 1, 1, None, 1, 1, False]
+ 15            [-2, -1]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 16                  -1  3   2232320  ultralytics.nn.modules.block.RepC3           [512, 256, 3]                 
+ 17                  -1  1     66048  ultralytics.nn.modules.conv.Conv             [256, 256, 1, 1]              
+ 18                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 19                   3  1    131584  ultralytics.nn.modules.conv.Conv             [512, 256, 1, 1, None, 1, 1, False]
+ 20            [-2, -1]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 21                  -1  3   2232320  ultralytics.nn.modules.block.RepC3           [512, 256, 3]                 
+ 22                  -1  1    590336  ultralytics.nn.modules.conv.Conv             [256, 256, 3, 2]              
+ 23            [-1, 17]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 24                  -1  3   2232320  ultralytics.nn.modules.block.RepC3           [512, 256, 3]                 
+ 25                  -1  1    590336  ultralytics.nn.modules.conv.Conv             [256, 256, 3, 2]              
+ 26            [-1, 12]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 27                  -1  3   2232320  ultralytics.nn.modules.block.RepC3           [512, 256, 3]                 
+ 28        [21, 24, 27]  1   7318292  ultralytics.nn.modules.head.RTDETRDecoder    [8, [256, 256, 256], 256, 150]
+rtdetr_nq150 summary: 470 layers, 32,822,516 parameters, 32,822,516 gradients, 107.3 GFLOPs
+
+Remapped 5/8 decoder cls head rows from pretrained weights by class name
+Transferred 941/941 items from pretrained weights
+[34m[1mAMP: [0mrunning Automatic Mixed Precision (AMP) checks...
+[34m[1mAMP: [0mchecks passed ✅
+[34m[1mtrain: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 1261.7±1702.9 MB/s, size: 186.5 KB)
+[34m[1mtrain: [0mNew cache created: /tmp/hw2_cache/masked_b5440aaa6d55/labels/uav0000013_00000_v.cache
+[34m[1malbumentations: [0mBlur(p=0.01, blur_limit=(3, 7)), MedianBlur(p=0.01, blur_limit=(3, 7)), ToGray(p=0.01, method='weighted_average', num_output_channels=3), CLAHE(p=0.01, clip_limit=(1.0, 4.0), tile_grid_size=(8, 8))
+[34m[1mval: [0mFast image access ✅ (ping: 0.0±0.0 ms, read: 2063.6±1086.9 MB/s, size: 306.3 KB)
+[34m[1mval: [0mNew cache created: /content/data/val/labels/uav0000086_00000_v.cache
+[34m[1moptimizer:[0m AdamW(lr=0.0001, momentum=0.9) with parameter groups 143 weight(decay=0.0), 206 weight(decay=0.0001), 226 bias(decay=0.0)
+Using 8090 train, 571 val images for fraction=1.0 at imgsz=960
+Using 2 dataloader workers
+Logging results to [1m/content/hw2_work/53_rtdetr_sched/dataset/ultralytics/train[0m
+Starting training for 3 epochs...
+
+      Epoch    GPU_mem  giou_loss   cls_loss    l1_loss  Instances       Size
+                   all        571      22906      0.498      0.441      0.412      0.214
+
+      Epoch    GPU_mem  giou_loss   cls_loss    l1_loss  Instances       Size
+                   all        571      22906      0.551      0.455      0.433       0.23
+Closing dataloader mosaic
+[34m[1malbumentations: [0mBlur(p=0.01, blur_limit=(3, 7)), MedianBlur(p=0.01, blur_limit=(3, 7)), ToGray(p=0.01, method='weighted_average', num_output_channels=3), CLAHE(p=0.01, clip_limit=(1.0, 4.0), tile_grid_size=(8, 8))
+
+      Epoch    GPU_mem  giou_loss   cls_loss    l1_loss  Instances       Size
+                   all        571      22906      0.566      0.477      0.446      0.228
+
+3 epochs completed in 0.997 hours.
+Optimizer stripped from /content/hw2_work/53_rtdetr_sched/dataset/ultralytics/train/weights/last.pt, 66.3MB
+Optimizer stripped from /content/hw2_work/53_rtdetr_sched/dataset/ultralytics/train/weights/best.pt, 66.3MB
+
+Validating /content/hw2_work/53_rtdetr_sched/dataset/ultralytics/train/weights/best.pt...
+Ultralytics 8.4.203 🚀 Python-3.13.16 torch-2.14.1+cu130 CUDA:0 (Tesla T4, 14913MiB)
+rtdetr_nq150 summary (fused): 315 layers, 32,000,180 parameters, 0 gradients, 102.7 GFLOPs
+                   all        571      22906      0.548      0.457      0.433       0.23
+                person        557      10089      0.591      0.652      0.605      0.269
+               bicycle        197       1213      0.767      0.235      0.337      0.155
+                   car        478       6393      0.693      0.656      0.639      0.408
+                   van        455       1371      0.586      0.395      0.417      0.241
+                 truck        197        271      0.487      0.494      0.468      0.245
+              tricycle        333       1099      0.497      0.519      0.467      0.227
+                   bus         37         53      0.344      0.264      0.215      0.185
+                 motor        375       2417      0.421      0.443      0.314      0.112
+Speed: 0.5ms preprocess, 38.3ms inference, 0.0ms loss, 0.4ms postprocess per image
+Optimizer stripped from /content/hw2_work/53_rtdetr_sched/weights/best.pt, 66.3MB

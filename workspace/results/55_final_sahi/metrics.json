@@ -1,0 +1,22 @@
+{
+  "mAP": 0.2635871754208729,
+  "AP50": 0.5005626269417504,
+  "AP75": 0.24059847561110384,
+  "AR": 0.4153829489154194,
+  "n_val_frames": 2846,
+  "n_gt": 114132,
+  "n_det": 863958,
+  "AP_small": 0.10533859674664084,
+  "AP_medium": 0.2275331005791419,
+  "AP_large": 0.4608977023612791,
+  "fps": 1.7357324026873087,
+  "train_minutes": 0.0,
+  "epochs": 0,
+  "imgsz": 960,
+  "weights_from": [
+    "41_rtdetr_queries"
+  ],
+  "tricks": "models=1 views=1 sahi=1344/0.2 merge=nms",
+  "infer_minutes": 48.69011511405309,
+  "val_full": true
+}

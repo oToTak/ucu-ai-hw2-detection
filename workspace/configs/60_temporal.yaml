@@ -3,7 +3,7 @@
 # і застосовує найкращу точку до submission.csv того ж рану-джерела.
 runner: temporal
 
-source: 41_rtdetr_queries   # ран із повним preds_val.json.gz і submission.csv (найкращий на повному val)
+source: 54_rtdetr_1280      # ран із повним preds_val.json.gz і submission.csv (найкраща модель; був 41_rtdetr_queries)
 select: mAP                 # за чим вибирати найкращу точку сітки
 
 # Усі ключі списки; декартів добуток. Відсутні ключі беруть значення за замовчуванням із temporal.PARAMS.
